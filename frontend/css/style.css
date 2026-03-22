@@ -57,3 +57,17 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; color: var(--t
   .hero-section { min-height: auto; padding-bottom: 4rem; }
   .section-block { padding: 4.5rem 0; }
 }
+
+.camera-settings { border-top: 1px solid rgba(37,99,235,.12); padding-top: 1rem; }
+.setting-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.setting-card { background: rgba(248,251,255,.95); border: 1px solid var(--border); border-radius: 18px; padding: 1rem; }
+.setting-card .form-label { font-weight: 700; color: var(--text); display: flex; justify-content: space-between; gap: 1rem; }
+.camera-stage::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,18,38,.08), rgba(7,18,38,.02)); z-index: 0; }
+.camera-stage .roi-hint { position: absolute; border: 2px dashed rgba(255,255,255,.75); border-radius: 22px; z-index: 3; pointer-events: none; box-shadow: inset 0 0 0 9999px rgba(4,10,23,.18); }
+.camera-stage .roi-hint::after { content: '推荐识别区域'; position: absolute; top: -30px; left: 0; color: #fff; font-size: .82rem; background: rgba(15,35,76,.78); padding: .25rem .55rem; border-radius: 999px; }
+@media (max-width: 991px) { .setting-grid { grid-template-columns: 1fr; } }
+
+.camera-fixed-policy { border-top: 1px solid rgba(37,99,235,.12); padding-top: 1rem; }
+.policy-card { background: rgba(255,255,255,.75); border: 1px solid rgba(37,99,235,.12); border-radius: 20px; padding: 1rem 1.1rem; }
+.policy-title { font-weight: 700; color: #16325c; margin-bottom: .35rem; }
+.policy-text { color: #5d6b84; line-height: 1.7; }

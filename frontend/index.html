@@ -122,7 +122,13 @@
               <button id="stopCameraBtn" class="btn btn-outline-secondary" disabled><i class="bi bi-stop-circle me-2"></i>关闭摄像头</button>
               <button id="snapshotRecordBtn" class="btn btn-outline-success" disabled><i class="bi bi-save me-2"></i>保存当前识别记录</button>
             </div>
-            <p class="camera-tip mt-3 mb-0">优化说明：前端采用节流请求、请求锁、防抖保存与独立覆盖层绘框，降低频繁截图导致的卡顿。</p>
+            <div class="camera-fixed-policy mt-4">
+              <div class="policy-card">
+                <div class="policy-title">实时识别策略</div>
+                <div class="policy-text">摄像头识别参数已固定在后端：仅识别推荐框内部的目标，并优先抓取更靠近推荐区域中心的垃圾主体；推荐框外的物体会被自动忽略。</div>
+              </div>
+            </div>
+            <p class="camera-tip mt-3 mb-0">优化说明：系统采用“固定中央 ROI + 推荐区域内动态抓取 + 连续帧稳定确认 + 框平滑”组合方案，只识别推荐框内目标，并让识别框在推荐区域内跟随垃圾主体动态移动。</p>
           </div>
         </div>
         <div class="col-lg-4">
@@ -131,6 +137,7 @@
             <h3 id="cameraClassResult">--</h3>
             <p><strong>类别归属：</strong><span id="cameraGroupResult">--</span></p>
             <p><strong>置信度：</strong><span id="cameraConfResult">--</span></p>
+            <p><strong>稳定状态：</strong><span id="cameraStableState">--</span></p>
             <p><strong>回收建议：</strong></p>
             <p id="cameraAdviceResult" class="text-secondary"></p>
             <div class="d-flex gap-2 flex-wrap">

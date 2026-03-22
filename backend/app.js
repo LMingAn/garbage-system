@@ -138,11 +138,19 @@ function normalizePredictionPayload(payload, mode) {
         confidence: conf,
         confidence_text: `${(conf * 100).toFixed(2)}%`,
         bbox: item.bbox || item.box || [],
-        advice: itemInfo.advice
+        advice: itemInfo.advice,
+        score: item.score || null
       };
     }),
     raw_image: data?.image || null,
-    detect_mode: mode
+    detect_mode: mode,
+    stable: Boolean(data?.stable),
+    stable_count: Number(data?.stable_count || 0),
+    roi: data?.roi || null,
+    roi_box: data?.roi_box || null,
+    focus_zone: data?.focus_zone || null,
+    source_size: data?.source_size || null,
+    params: data?.params || {}
   };
 }
 
@@ -168,14 +176,19 @@ function createHistoryRecord(result, mode, extra = {}) {
   });
 }
 
-async function requestPythonPrediction({ filePath, base64, mode }) {
+async function requestPythonPrediction({ filePath, base64, mode, options = {} }) {
   if (filePath) {
     const form = new FormData();
     form.append('image', fs.createReadStream(filePath));
+    Object.entries(options).forEach(([key, value]) => {
+      if (value === undefined || value === null || value === '') return;
+      form.append(key, typeof value === 'object' ? JSON.stringify(value) : String(value));
+    });
+    form.append('mode', mode);
     const response = await axios.post(`${PYTHON_API_BASE}/predict`, form, { headers: form.getHeaders(), timeout: 30000 });
     return normalizePredictionPayload(response.data, mode);
   }
-  const response = await axios.post(`${PYTHON_API_BASE}/predict`, { base64 }, { timeout: 30000 });
+  const response = await axios.post(`${PYTHON_API_BASE}/predict`, { base64, mode, ...options }, { timeout: 30000 });
   return normalizePredictionPayload(response.data, mode);
 }
 
@@ -237,7 +250,8 @@ app.delete('/api/history', (req, res) => {
 app.post('/api/predict/upload', upload.single('image'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ code: 400, msg: '请上传图片文件' });
-    const result = await requestPythonPrediction({ filePath: req.file.path, mode: 'upload' });
+    const options = {};
+    const result = await requestPythonPrediction({ filePath: req.file.path, mode: 'upload', options });
     const record = createHistoryRecord(result, 'upload', { image_path: `/uploads/${path.basename(req.file.path)}` });
     res.json({ code: 200, msg: '识别成功', data: { ...result, history_id: record.id } });
   } catch (err) {
@@ -248,9 +262,10 @@ app.post('/api/predict/upload', upload.single('image'), async (req, res) => {
 
 app.post('/api/predict/camera', async (req, res) => {
   try {
-    const { base64, saveRecord = false } = req.body;
+    const { base64, saveRecord = false, session_id } = req.body;
     if (!base64) return res.status(400).json({ code: 400, msg: '缺少 base64 图片' });
-    const result = await requestPythonPrediction({ base64, mode: 'camera' });
+    const options = { session_id };
+    const result = await requestPythonPrediction({ base64, mode: 'camera', options });
     let historyId = null;
     if (saveRecord) {
       const record = createHistoryRecord(result, 'camera');

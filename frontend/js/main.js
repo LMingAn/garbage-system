@@ -1,5 +1,7 @@
 const API_BASE = 'http://localhost:3000/api';
 
+const FIXED_CAMERA_ROI = { x: 0.28, y: 0.18, w: 0.44, h: 0.62 };
+
 const state = {
   lastResult: null,
   cameraLastResult: null,
@@ -9,7 +11,12 @@ const state = {
   lastSavedSignature: '',
   scienceRows: [],
   smoothedBox: null,
-  geo: null
+  geo: null,
+  cameraSessionId: `cam_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+  roi: FIXED_CAMERA_ROI,
+  roiBox: null,
+  sourceSize: null,
+  settings: {}
 };
 
 const imageInput = document.getElementById('imageInput');
@@ -38,6 +45,7 @@ const cameraClassResult = document.getElementById('cameraClassResult');
 const cameraGroupResult = document.getElementById('cameraGroupResult');
 const cameraConfResult = document.getElementById('cameraConfResult');
 const cameraAdviceResult = document.getElementById('cameraAdviceResult');
+const cameraStableState = document.getElementById('cameraStableState');
 const cameraScienceBtn = document.getElementById('cameraScienceBtn');
 const cameraPointBtn = document.getElementById('cameraPointBtn');
 const cameraMapResult = document.getElementById('cameraMapResult');
@@ -49,6 +57,7 @@ const historyTableBody = document.getElementById('historyTableBody');
 const historyEmpty = document.getElementById('historyEmpty');
 const scienceSearchInput = document.getElementById('scienceSearchInput');
 const scienceGrid = document.getElementById('scienceGrid');
+
 
 pickImageBtn.addEventListener('click', () => imageInput.click());
 uploadArea.addEventListener('click', () => imageInput.click());
@@ -79,10 +88,11 @@ function handleImageChange() {
   reader.readAsDataURL(file);
 }
 
+
 predictBtn.addEventListener('click', async () => {
   const file = imageInput.files?.[0];
   if (!file) return;
-  setButtonLoading(predictBtn, true, '识别中...');
+  setButtonLoading(predictBtn, true, '识别中...', 'bi-hourglass-split');
   hideError();
   try {
     const formData = new FormData();
@@ -115,6 +125,9 @@ function renderCameraResult(result) {
   cameraGroupResult.textContent = result.category_group;
   cameraConfResult.textContent = result.confidence_text;
   cameraAdviceResult.textContent = result.advice;
+  cameraStableState.textContent = result.stable ? `已稳定（连续 ${result.stable_count || 1} 帧）` : `观察中（连续 ${result.stable_count || 1} 帧）`;
+  state.roiBox = Array.isArray(result.roi_box) ? result.roi_box : null;
+  state.sourceSize = result.source_size || null;
   cameraMapResult.classList.add('d-none');
 }
 
@@ -122,7 +135,7 @@ function showError(msg) { errorContainer.textContent = msg; errorContainer.class
 function hideError() { errorContainer.classList.add('d-none'); }
 function setButtonLoading(btn, loading, text, icon = 'bi-hourglass-split') {
   btn.disabled = loading;
-  btn.innerHTML = loading ? `<i class="bi ${icon} me-2"></i>${text}` : `<i class="bi ${icon} me-2"></i>${text}`;
+  btn.innerHTML = `<i class="bi ${icon} me-2"></i>${text}`;
 }
 
 startCameraBtn.addEventListener('click', async () => {
@@ -134,7 +147,7 @@ startCameraBtn.addEventListener('click', async () => {
     startCameraBtn.disabled = true;
     stopCameraBtn.disabled = false;
     snapshotRecordBtn.disabled = false;
-    state.detectInterval = setInterval(runCameraDetect, 1200);
+    state.detectInterval = setInterval(runCameraDetect, 950);
   } catch (error) {
     alert('摄像头启动失败，请检查浏览器权限。');
   }
@@ -149,13 +162,14 @@ function stopCamera() {
   state.detectInterval = null;
   state.detectBusy = false;
   state.smoothedBox = null;
-  if (state.stream) {
-    state.stream.getTracks().forEach(track => track.stop());
-  }
+  state.cameraLastResult = null;
+  if (state.stream) state.stream.getTracks().forEach(track => track.stop());
   state.stream = null;
   cameraVideo.srcObject = null;
   const ctx = overlayCanvas.getContext('2d');
   ctx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+  state.roiBox = null;
+  state.sourceSize = null;
   startCameraBtn.disabled = false;
   stopCameraBtn.disabled = true;
   snapshotRecordBtn.disabled = true;
@@ -165,6 +179,7 @@ function syncOverlaySize() {
   if (!cameraVideo.videoWidth || !cameraVideo.videoHeight) return;
   overlayCanvas.width = cameraVideo.videoWidth;
   overlayCanvas.height = cameraVideo.videoHeight;
+  drawPredictions(state.cameraLastResult?.predictions || []);
 }
 
 async function runCameraDetect() {
@@ -179,11 +194,16 @@ async function runCameraDetect() {
     captureCanvas.height = Math.round(captureCanvas.width / ratio);
     const ctx = captureCanvas.getContext('2d', { willReadFrequently: false });
     ctx.drawImage(cameraVideo, 0, 0, captureCanvas.width, captureCanvas.height);
-    const base64 = captureCanvas.toDataURL('image/jpeg', 0.72);
+
+    const base64 = captureCanvas.toDataURL('image/jpeg', 0.76);
     const res = await fetch(`${API_BASE}/predict/camera`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ base64, saveRecord: false })
+      body: JSON.stringify({
+        base64,
+        saveRecord: false,
+        session_id: state.cameraSessionId,
+      })
     });
     const data = await res.json();
     if (data.code === 200 && data.data) {
@@ -201,13 +221,14 @@ async function runCameraDetect() {
 function drawPredictions(predictions) {
   const ctx = overlayCanvas.getContext('2d');
   ctx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+  drawROI(ctx);
   if (!predictions.length) return;
 
   const candidates = predictions
     .filter(item => Array.isArray(item.bbox) && item.bbox.length === 4)
     .map(item => normalizeBox(item.bbox, overlayCanvas.width, overlayCanvas.height, item))
     .filter(Boolean)
-    .sort((a, b) => b.item.confidence - a.item.confidence);
+    .sort((a, b) => (b.item.score || b.item.confidence || 0) - (a.item.score || a.item.confidence || 0));
 
   if (!candidates.length) return;
   const best = candidates[0];
@@ -215,8 +236,8 @@ function drawPredictions(predictions) {
   const box = state.smoothedBox;
 
   ctx.lineWidth = 4;
-  ctx.strokeStyle = '#22c55e';
-  ctx.fillStyle = 'rgba(34,197,94,.15)';
+  ctx.strokeStyle = best.item.suppressed ? '#f59e0b' : '#22c55e';
+  ctx.fillStyle = best.item.suppressed ? 'rgba(245,158,11,.12)' : 'rgba(34,197,94,.15)';
   ctx.strokeRect(box.x1, box.y1, box.w, box.h);
   ctx.fillRect(box.x1, box.y1, box.w, box.h);
 
@@ -226,17 +247,48 @@ function drawPredictions(predictions) {
   const th = 34;
   const tx = box.x1;
   const ty = Math.max(0, box.y1 - th - 6);
-  ctx.fillStyle = '#22c55e';
+  ctx.fillStyle = best.item.suppressed ? '#f59e0b' : '#22c55e';
   ctx.fillRect(tx, ty, tw, th);
   ctx.fillStyle = '#fff';
   ctx.fillText(label, tx + 12, ty + 23);
 }
 
+function drawROI(ctx) {
+  if (!overlayCanvas.width || !overlayCanvas.height) return;
+  const roi = state.roi || FIXED_CAMERA_ROI;
+  const x = roi.x * overlayCanvas.width;
+  const y = roi.y * overlayCanvas.height;
+  const w = roi.w * overlayCanvas.width;
+  const h = roi.h * overlayCanvas.height;
+  ctx.save();
+  ctx.fillStyle = 'rgba(4,10,23,.20)';
+  ctx.fillRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+  ctx.clearRect(x, y, w, h);
+  ctx.strokeStyle = 'rgba(255,255,255,.90)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([10, 8]);
+  ctx.strokeRect(x, y, w, h);
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(255,255,255,.96)';
+  ctx.font = 'bold 16px Microsoft YaHei';
+  ctx.fillText('推荐识别区域', x + 8, Math.max(20, y - 12));
+  ctx.restore();
+}
+
+
 function normalizeBox(bbox, canvasW, canvasH, item) {
   let [x1, y1, x2, y2] = bbox.map(Number);
+  const sourceW = Number(state.sourceSize?.width || canvasW);
+  const sourceH = Number(state.sourceSize?.height || canvasH);
+  const scaleX = canvasW / sourceW;
+  const scaleY = canvasH / sourceH;
+
   if (x2 <= 1 && y2 <= 1) {
     x1 *= canvasW; x2 *= canvasW; y1 *= canvasH; y2 *= canvasH;
+  } else {
+    x1 *= scaleX; x2 *= scaleX; y1 *= scaleY; y2 *= scaleY;
   }
+
   x1 = Math.max(0, Math.min(canvasW, x1));
   x2 = Math.max(0, Math.min(canvasW, x2));
   y1 = Math.max(0, Math.min(canvasH, y1));
@@ -245,12 +297,31 @@ function normalizeBox(bbox, canvasW, canvasH, item) {
   if (w <= 0 || h <= 0) return null;
   const area = w * h;
   if (area >= canvasW * canvasH * 0.94) return null;
+
+  const roiPixels = getCurrentRoiPixels(canvasW, canvasH);
+  const cx = (x1 + x2) / 2;
+  const cy = (y1 + y2) / 2;
+  if (roiPixels && !(cx >= roiPixels.x1 && cx <= roiPixels.x2 && cy >= roiPixels.y1 && cy <= roiPixels.y2)) {
+    return null;
+  }
+
   return { x1, y1, x2, y2, w, h, item };
+}
+
+function getCurrentRoiPixels(canvasW, canvasH) {
+  if (Array.isArray(state.roiBox) && state.roiBox.length === 4 && state.sourceSize?.width && state.sourceSize?.height) {
+    const [rx1, ry1, rx2, ry2] = state.roiBox.map(Number);
+    const sx = canvasW / Number(state.sourceSize.width);
+    const sy = canvasH / Number(state.sourceSize.height);
+    return { x1: rx1 * sx, y1: ry1 * sy, x2: rx2 * sx, y2: ry2 * sy };
+  }
+  const roi = state.roi || FIXED_CAMERA_ROI;
+  return { x1: roi.x * canvasW, y1: roi.y * canvasH, x2: (roi.x + roi.w) * canvasW, y2: (roi.y + roi.h) * canvasH };
 }
 
 function smoothBox(next) {
   if (!state.smoothedBox) return next;
-  const alpha = .55;
+  const alpha = 0.5;
   const prev = state.smoothedBox;
   const x1 = prev.x1 * (1 - alpha) + next.x1 * alpha;
   const y1 = prev.y1 * (1 - alpha) + next.y1 * alpha;
@@ -268,11 +339,15 @@ snapshotRecordBtn.addEventListener('click', async () => {
     captureCanvas.width = Math.min(640, cameraVideo.videoWidth);
     captureCanvas.height = Math.round(captureCanvas.width * cameraVideo.videoHeight / cameraVideo.videoWidth);
     captureCanvas.getContext('2d').drawImage(cameraVideo, 0, 0, captureCanvas.width, captureCanvas.height);
-    const base64 = captureCanvas.toDataURL('image/jpeg', 0.72);
+    const base64 = captureCanvas.toDataURL('image/jpeg', 0.76);
     const res = await fetch(`${API_BASE}/predict/camera`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ base64, saveRecord: true })
+      body: JSON.stringify({
+        base64,
+        saveRecord: true,
+        session_id: state.cameraSessionId,
+      })
     });
     const data = await res.json();
     if (data.code !== 200) throw new Error(data.msg || '保存失败');

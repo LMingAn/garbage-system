@@ -1,14 +1,1 @@
-[
-  {
-    "id": "1773136537719_e1h111",
-    "class_name": "battery",
-    "display_name": "电池",
-    "confidence": 0.98,
-    "confidence_text": "98.00%",
-    "advice": "有害垃圾：电池需投入红色有害垃圾桶，切勿随意丢弃，会污染土壤和水源，可联系社区回收点。",
-    "category_group": "有害垃圾",
-    "detect_mode": "upload",
-    "identify_time": "2026-03-10T09:55:37.719Z",
-    "image_path": "/uploads/1773136535274-7ibeji86.jpg"
-  }
-]
+[]
