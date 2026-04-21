@@ -4,32 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="812821bc-d717-45c9-8645-5b2a00a9d3c5" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/garbage-system.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/garbage_proj.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/garbage_system.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/config/category_meta.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/config/category_meta.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/config/recycle_advice.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/config/recycle_advice.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/data/history.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/data/history.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/python_service/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/python_service/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/python_service/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/python_service/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/data/knowledge.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/data/knowledge.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/result.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training/configs/data.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/training/configs/data.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/training/configs/stage1_head_warmup.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/training/configs/stage1_head_warmup.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/training/configs/stage2_full_finetune.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/training/configs/stage2_full_finetune.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/training/scripts/train_pipeline.py" beforeDir="false" afterPath="$PROJECT_DIR$/training/scripts/train_pipeline.py" afterDir="false" />
-    </list>
+    <list default="true" id="812821bc-d717-45c9-8645-5b2a00a9d3c5" name="更改" comment="v3（大幅重构）" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -76,6 +51,11 @@
     "git-widget-placeholder": "master"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\basic software\PC_project\garbage-system\docs" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -91,6 +71,30 @@
       <option name="presentableId" value="Default" />
       <updated>1776744150036</updated>
     </task>
+    <task id="LOCAL-00001" summary="v3（大幅重构）">
+      <option name="closed" value="true" />
+      <created>1776751487062</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1776751487062</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="v3（大幅重构）" />
+    <option name="LAST_COMMIT_MESSAGE" value="v3（大幅重构）" />
   </component>
 </project>
