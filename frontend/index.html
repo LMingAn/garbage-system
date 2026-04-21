@@ -1,204 +1,28 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>智能垃圾分类识别与回收处理系统</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能垃圾分类与回收处理系统</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark app-nav fixed-top">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="#home"><i class="bi bi-recycle me-2"></i>智能垃圾分类系统</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
-        <li class="nav-item"><a class="nav-link" href="#upload">图片识别</a></li>
-        <li class="nav-item"><a class="nav-link" href="#camera">摄像头识别</a></li>
-        <li class="nav-item"><a class="nav-link" href="#history">历史记录</a></li>
-        <li class="nav-item"><a class="nav-link" href="#science">垃圾科普</a></li>
-      </ul>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="index.html"><span class="brand-mark">♻</span><span>智能垃圾分类与回收处理系统</span></a>
+      <nav class="nav">
+        <a class="active" href="index.html">首页</a>
+        <a class="" href="image.html">图片识别</a>
+        <a class="" href="video.html">视频识别</a>
+        <a class="" href="camera.html">摄像头识别</a>
+        <a class="" href="recycle.html">回收点</a>
+        <a class="" href="knowledge.html">分类科普</a>
+        <a class="" href="history.html">历史记录</a>
+      </nav>
     </div>
-  </div>
-</nav>
-
-<header id="home" class="hero-section">
-  <div class="container py-5">
-    <div class="row align-items-center g-4">
-      <div class="col-lg-7">
-        <span class="hero-badge">YOLOv8 + Node.js + Python + 地图导航</span>
-        <h1 class="hero-title mt-3">智能垃圾分类识别与回收处理系统</h1>
-        <p class="hero-desc mt-3">支持图片上传识别、摄像头实时识别、历史识别记录、垃圾分类科普、周边回收点导航，形成“识别—学习—投放”的完整闭环。</p>
-        <div class="hero-actions mt-4 d-flex flex-wrap gap-3">
-          <a href="#upload" class="btn btn-primary btn-lg px-4"><i class="bi bi-image me-2"></i>开始图片识别</a>
-          <a href="#camera" class="btn btn-outline-light btn-lg px-4"><i class="bi bi-camera-video me-2"></i>打开实时识别</a>
-        </div>
-        <div class="hero-metrics row g-3 mt-4">
-          <div class="col-sm-4"><div class="metric-card"><strong>12 类</strong><span>垃圾识别类别</span></div></div>
-          <div class="col-sm-4"><div class="metric-card"><strong>3 大扩展</strong><span>历史 / 导航 / 科普</span></div></div>
-          <div class="col-sm-4"><div class="metric-card"><strong>双模式</strong><span>上传 + 摄像头</span></div></div>
-        </div>
-      </div>
-      <div class="col-lg-5">
-        <div class="hero-panel glass-card">
-          <h5>系统亮点</h5>
-          <ul class="feature-list mt-3">
-            <li><i class="bi bi-check2-circle"></i> 自动记录每次识别结果并支持检索</li>
-            <li><i class="bi bi-check2-circle"></i> 按垃圾类别给出回收处理建议与科普</li>
-            <li><i class="bi bi-check2-circle"></i> 调用地图服务提供就近投放点导航入口</li>
-            <li><i class="bi bi-check2-circle"></i> 摄像头识别采用节流与防并发，降低卡帧</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</header>
-
-<main>
-  <section id="upload" class="section-block">
-    <div class="container">
-      <div class="section-heading">
-        <span>图像上传识别</span>
-        <h2>上传垃圾图片，自动分析类别与投放方式</h2>
-      </div>
-      <div class="row g-4">
-        <div class="col-lg-7">
-          <div class="glass-card p-4 h-100">
-            <div id="uploadArea" class="upload-area text-center">
-              <i class="bi bi-cloud-arrow-up-fill"></i>
-              <h5 class="mt-3">拖拽图片到此处，或点击选择文件</h5>
-              <p class="text-muted mb-3">支持 JPG / JPEG / PNG，建议主体清晰、光照充足。</p>
-              <input type="file" id="imageInput" accept="image/*" class="d-none">
-              <button class="btn btn-outline-primary" type="button" id="pickImageBtn">选择图片</button>
-            </div>
-            <div id="previewContainer" class="preview-panel d-none mt-4">
-              <img id="previewImage" alt="预览图">
-            </div>
-            <div class="d-grid mt-4">
-              <button id="predictBtn" class="btn btn-primary btn-lg" disabled><i class="bi bi-search me-2"></i>开始识别</button>
-            </div>
-            <div id="errorContainer" class="alert alert-danger mt-3 d-none"></div>
-          </div>
-        </div>
-        <div class="col-lg-5">
-          <div id="resultContainer" class="glass-card p-4 result-panel d-none">
-            <div class="d-flex justify-content-between align-items-start gap-3">
-              <div>
-                <p class="mini-label mb-2">识别结果</p>
-                <h3 id="classResultDisplay">--</h3>
-                <span id="resultGroupBadge" class="badge text-bg-primary">--</span>
-              </div>
-              <div class="confidence-ring"><span id="confResult">0%</span></div>
-            </div>
-            <div class="mt-3"><strong>回收处理建议：</strong><p id="adviceResult" class="mt-2 text-secondary"></p></div>
-            <div class="result-actions d-flex flex-wrap gap-2 mt-3">
-              <button id="jumpScienceBtn" class="btn btn-outline-success btn-sm"><i class="bi bi-book me-1"></i>查看分类科普</button>
-              <button id="loadPointBtn" class="btn btn-outline-primary btn-sm"><i class="bi bi-geo-alt me-1"></i>查询附近回收点</button>
-            </div>
-            <div id="mapResult" class="map-card mt-4 d-none"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="camera" class="section-block alt-bg">
-    <div class="container">
-      <div class="section-heading">
-        <span>摄像头实时识别</span>
-        <h2>实时检测垃圾主体并绘制识别框</h2>
-      </div>
-      <div class="row g-4 align-items-start">
-        <div class="col-lg-8">
-          <div class="glass-card p-4">
-            <div class="camera-stage">
-              <video id="cameraVideo" playsinline autoplay muted></video>
-              <canvas id="overlayCanvas"></canvas>
-            </div>
-            <div class="camera-controls mt-4 d-flex flex-wrap gap-2">
-              <button id="startCameraBtn" class="btn btn-primary"><i class="bi bi-play-circle me-2"></i>开启摄像头</button>
-              <button id="stopCameraBtn" class="btn btn-outline-secondary" disabled><i class="bi bi-stop-circle me-2"></i>关闭摄像头</button>
-              <button id="snapshotRecordBtn" class="btn btn-outline-success" disabled><i class="bi bi-save me-2"></i>保存当前识别记录</button>
-            </div>
-            <div class="camera-fixed-policy mt-4">
-              <div class="policy-card">
-                <div class="policy-title">实时识别策略</div>
-                <div class="policy-text">摄像头识别参数已固定在后端：仅识别推荐框内部的目标，并优先抓取更靠近推荐区域中心的垃圾主体；推荐框外的物体会被自动忽略。</div>
-              </div>
-            </div>
-            <p class="camera-tip mt-3 mb-0">优化说明：系统采用“固定中央 ROI + 推荐区域内动态抓取 + 连续帧稳定确认 + 框平滑”组合方案，只识别推荐框内目标，并让识别框在推荐区域内跟随垃圾主体动态移动。</p>
-          </div>
-        </div>
-        <div class="col-lg-4">
-          <div id="cameraResultContainer" class="glass-card p-4 d-none">
-            <p class="mini-label mb-2">实时结果</p>
-            <h3 id="cameraClassResult">--</h3>
-            <p><strong>类别归属：</strong><span id="cameraGroupResult">--</span></p>
-            <p><strong>置信度：</strong><span id="cameraConfResult">--</span></p>
-            <p><strong>稳定状态：</strong><span id="cameraStableState">--</span></p>
-            <p><strong>回收建议：</strong></p>
-            <p id="cameraAdviceResult" class="text-secondary"></p>
-            <div class="d-flex gap-2 flex-wrap">
-              <button id="cameraScienceBtn" class="btn btn-outline-success btn-sm">跳转科普</button>
-              <button id="cameraPointBtn" class="btn btn-outline-primary btn-sm">查询回收点</button>
-            </div>
-            <div id="cameraMapResult" class="map-card mt-4 d-none"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="history" class="section-block">
-    <div class="container">
-      <div class="section-heading d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
-        <div>
-          <span>历史识别记录</span>
-          <h2>支持查看、搜索与删除，避免识别后忘记结果</h2>
-        </div>
-        <div class="history-toolbar d-flex flex-wrap gap-2">
-          <input id="historySearchInput" class="form-control" placeholder="搜索类别/建议/方式">
-          <select id="historyModeFilter" class="form-select">
-            <option value="">全部方式</option>
-            <option value="upload">图片上传</option>
-            <option value="camera">摄像头识别</option>
-          </select>
-          <button id="clearHistoryBtn" class="btn btn-outline-danger">清空记录</button>
-        </div>
-      </div>
-      <div class="glass-card p-4 mt-4">
-        <div class="table-responsive">
-          <table class="table align-middle history-table">
-            <thead>
-              <tr>
-                <th>垃圾类别</th><th>归属分类</th><th>置信度</th><th>识别方式</th><th>识别时间</th><th>回收建议</th><th>操作</th>
-              </tr>
-            </thead>
-            <tbody id="historyTableBody"></tbody>
-          </table>
-        </div>
-        <div id="historyEmpty" class="empty-state d-none">暂无历史记录，先去识别一张垃圾图片吧。</div>
-      </div>
-    </div>
-  </section>
-
-  <section id="science" class="section-block alt-bg">
-    <div class="container">
-      <div class="section-heading d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
-        <div>
-          <span>垃圾类别科普模块</span>
-          <h2>从识别结果跳转到详细科普页面，兼具教育意义</h2>
-        </div>
-        <input id="scienceSearchInput" class="form-control science-search" placeholder="搜索类别、示例或定义">
-      </div>
-      <div id="scienceGrid" class="row g-4 mt-1"></div>
-    </div>
-  </section>
-</main>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="js/main.js"></script>
+  </header>
+  <section class="hero"><div class="wrap"><div class="hero-panel"><div class="hero-copy"><span class="hero-badge">毕业设计系统 · YOLOv8 多目标检测</span><h1>基于 Python 与 YOLOv8 的<br>智能垃圾分类与回收处理系统</h1><p>系统支持图片多目标识别、视频识别、摄像头实时识别、分类科普、历史记录与回收点检索，针对本科毕设场景进行了页面重构、按钮层级优化和实时识别流程优化。</p><div class="hero-actions"><a class="btn btn-light btn-lg" href="image.html">开始图片识别</a><a class="btn btn-ghost btn-lg" href="camera.html">打开实时演示</a></div><div class="chips"><span>YOLOv8 多目标检测</span><span>GTX1650 训练友好</span><span>9 类垃圾体系</span><span>视频框平滑与稳定确认</span></div></div><div class="hero-side"><div class="hero-stat-grid"><div class="hero-stat"><span>识别模式</span><strong>3 种</strong><em>图片 / 视频 / 摄像头</em></div><div class="hero-stat"><span>类别数量</span><strong>9 类</strong><em>cardboard 并入 paper</em></div><div class="hero-stat"><span>输出内容</span><strong>4 层</strong><em>检测 / 建议 / 科普 / 回收点</em></div><div class="hero-stat"><span>系统目标</span><strong>闭环处理</strong><em>识别到回收建议</em></div></div></div></div></div></section><main class="wrap page-grid"><section class="card"><div class="page-header"><div><h1>系统功能总览</h1><p>将原单页结构改为多页面结构，降低单页信息密度，便于答辩展示与实际使用。</p></div><div class="page-badge">多页面导航版</div></div><div class="feature-grid"><div class="feature-card"><h3>图片多目标识别</h3><p>上传单张图片，输出检测图、多个目标类别、置信度、垃圾大类和回收建议。</p><div class="cta-row"><a class="btn btn-primary" href="image.html">进入页面</a></div></div><div class="feature-card"><h3>视频识别与统计</h3><p>支持对视频进行逐段分析，返回结果视频、识别统计和处理速度信息。</p><div class="cta-row"><a class="btn btn-primary" href="video.html">进入页面</a></div></div><div class="feature-card"><h3>摄像头实时识别</h3><p>支持摄像头实时检测、框叠加显示、轻量跟踪重置与稳定结果展示。</p><div class="cta-row"><a class="btn btn-primary" href="camera.html">进入页面</a></div></div></div></section><section class="card"><div class="page-header"><div><h1>项目特点</h1><p>本次重构重点优化了视觉层次、按钮大小对比、信息密度与系统使用路径。</p></div></div><div class="mini-list"><div class="mini-item">前端改为首页 + 功能页分离的多页面结构，减少单页堆叠感。</div><div class="mini-item">整体元素尺寸缩小，卡片、按钮、标题、输入区更均衡，更适合桌面端展示。</div><div class="mini-item">保留 YOLOv8 检测主链路，支持图片、视频和摄像头三种模式统一联动。</div><div class="mini-item">识别结果可直接跳转到科普、回收点检索与历史记录，体现系统闭环能力。</div></div></section></main>
+  <footer class="wrap footer">基于 Python、YOLOv8、Node.js 与前端多页面展示构建，已按 9 类垃圾体系重构，cardboard 已并入 paper。</footer>
+  <script src="js/main.js"></script>
 </body>
 </html>

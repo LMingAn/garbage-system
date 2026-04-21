@@ -1,9 +1,15 @@
+path: ../dataset
+train: images/train
+val: images/val
+test: images/test
 
-# 数据集配置
-path: D:\basic software\PC_project\garbage-system\dataset  # 数据集根路径
-train: images/train  # 训练图片路径
-val: images/val      # 验证图片路径
-
-# 类别
-nc: 10  # 类别数
-names: ['battery', 'biological', 'cardboard', 'clothes', 'glass', 'metal', 'paper', 'plastic', 'shoes', 'trash']  # 类别名称
+names:
+  0: battery
+  1: biological
+  2: clothes
+  3: glass
+  4: metal
+  5: paper
+  6: plastic
+  7: shoes
+  8: trash

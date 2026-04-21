@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图片识别 - 智能垃圾分类系统</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="index.html"><span class="brand-mark">♻</span><span>智能垃圾分类与回收处理系统</span></a>
+      <nav class="nav">
+        <a class="" href="index.html">首页</a>
+        <a class="active" href="image.html">图片识别</a>
+        <a class="" href="video.html">视频识别</a>
+        <a class="" href="camera.html">摄像头识别</a>
+        <a class="" href="recycle.html">回收点</a>
+        <a class="" href="knowledge.html">分类科普</a>
+        <a class="" href="history.html">历史记录</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap page-grid"><section class="card section-card"><div class="section-head"><div><span class="section-kicker">Image Detection</span><h2>图片多目标识别</h2><p>适合展示静态图像中的多目标垃圾检测效果，返回检测图、目标列表与回收建议。</p></div><div class="section-tag success">推荐先使用</div></div><div class="grid two equal"><div class="pane pane-input"><div class="control-card"><label class="field-label">选择图片</label><input type="file" id="imageInput" accept="image/*"><div class="row-btns mt12"><button id="imageDetectBtn" class="btn btn-primary btn-lg">上传并识别</button></div><p class="tip">建议上传目标清晰、光照正常、背景干扰较少的图片，以获得更稳定的多目标识别结果。</p></div><div class="preview-shell"><div class="preview-title">原图预览</div><div class="preview-box"><img id="imagePreview" alt="预览"></div></div></div><div class="pane pane-output"><div id="imageSummary" class="summary">暂无结果</div><div class="preview-shell"><div class="preview-title">识别结果图</div><div class="preview-box result-box"><img id="imageResult" alt="结果"></div></div><div class="result-list-title">检测详情</div><div id="imageDetections" class="detection-list"></div></div></div></section></main>
+  <footer class="wrap footer">基于 Python、YOLOv8、Node.js 与前端多页面展示构建，已按 9 类垃圾体系重构，cardboard 已并入 paper。</footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

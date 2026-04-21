@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="812821bc-d717-45c9-8645-5b2a00a9d3c5" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/garbage-system.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/garbage_proj.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/garbage_system.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/config/category_meta.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/config/category_meta.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/config/recycle_advice.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/config/recycle_advice.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/data/history.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/data/history.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/python_service/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/python_service/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/python_service/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/python_service/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/data/knowledge.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/data/knowledge.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/result.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/configs/data.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/training/configs/data.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/configs/stage1_head_warmup.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/training/configs/stage1_head_warmup.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/configs/stage2_full_finetune.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/training/configs/stage2_full_finetune.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/scripts/train_pipeline.py" beforeDir="false" afterPath="$PROJECT_DIR$/training/scripts/train_pipeline.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="56" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "LMingAn"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/LMingAn/garbage-system.git",
+    "accountId": "e3884442-a6dc-43f3-b554-e4d209bbfe03"
+  }
+}]]></component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 5
+}]]></component>
+  <component name="ProjectId" id="3CeReyTcIkHA2ndcLBRTuniuSPx" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-ca5e2b39c7df-6e1f45a539f7-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-253.29346.308" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="812821bc-d717-45c9-8645-5b2a00a9d3c5" name="更改" comment="" />
+      <created>1776744150036</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1776744150036</updated>
+    </task>
+    <servers />
+  </component>
+</project>

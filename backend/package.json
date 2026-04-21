@@ -1,21 +1,20 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
+  "name": "garbage-system-backend",
+  "version": "2.0.0",
+  "description": "基于 Python + YOLOv8 的智能垃圾分类与回收处理系统后端",
   "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "type": "commonjs",
-  "description": "",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
   "dependencies": {
     "axios": "^1.13.6",
     "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
     "express": "^5.2.1",
-    "multer": "^2.1.0",
-    "python-shell": "^5.0.0"
+    "form-data": "^4.0.4",
+    "multer": "^2.1.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

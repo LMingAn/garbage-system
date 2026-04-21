@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>视频识别 - 智能垃圾分类系统</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="index.html"><span class="brand-mark">♻</span><span>智能垃圾分类与回收处理系统</span></a>
+      <nav class="nav">
+        <a class="" href="index.html">首页</a>
+        <a class="" href="image.html">图片识别</a>
+        <a class="active" href="video.html">视频识别</a>
+        <a class="" href="camera.html">摄像头识别</a>
+        <a class="" href="recycle.html">回收点</a>
+        <a class="" href="knowledge.html">分类科普</a>
+        <a class="" href="history.html">历史记录</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap page-grid"><section class="card section-card"><div class="section-head"><div><span class="section-kicker">Video Analysis</span><h2>视频识别</h2><p>用于验证视频中的识别稳定性与多目标连续检测能力，后端采用间隔帧检测与轻量跟踪。</p></div><div class="section-tag info">平衡流畅度与准确率</div></div><div class="grid two equal"><div class="pane pane-input"><div class="control-card"><label class="field-label">选择视频</label><input type="file" id="videoInput" accept="video/*"><div class="inline-fields form-row compact"><label class="compact-field field-label">检测间隔帧数</label><input type="number" id="videoStride" min="1" max="10" value="2"></div><div class="row-btns mt12"><button id="videoDetectBtn" class="btn btn-primary btn-lg">分析视频</button></div><p class="tip">建议上传 720p 以内视频；间隔帧数越小，识别越密集，但处理时间会更长。</p></div></div><div class="pane pane-output"><div id="videoSummary" class="summary">暂无结果</div><div class="preview-shell dark-shell"><div class="preview-title">结果视频</div><video id="videoResult" controls class="result-video"></video></div><div class="result-list-title">统计与检测详情</div><div id="videoDetections" class="detection-list"></div></div></div></section></main>
+  <footer class="wrap footer">基于 Python、YOLOv8、Node.js 与前端多页面展示构建，已按 9 类垃圾体系重构，cardboard 已并入 paper。</footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

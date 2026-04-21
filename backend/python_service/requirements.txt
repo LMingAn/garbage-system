@@ -1,4 +1,6 @@
 flask
 ultralytics
+opencv-python
+numpy
 pillow
 pyyaml

@@ -1,1 +1,47 @@
-[]
+[
+  {
+    "id": "1776750990972_hy4fwt",
+    "identify_time": "2026-04-21T05:56:30.970Z",
+    "detect_mode": "image",
+    "class_name": "plastic",
+    "display_name": "塑料制品",
+    "category_group": "可回收物",
+    "confidence": 0.9818,
+    "confidence_text": "98.18%",
+    "advice": "塑料瓶和塑料包装建议先清洗、压缩，再投入可回收物容器。",
+    "track_id": null,
+    "stable_count": 0,
+    "hit_count": 0,
+    "source_file": "1776750990425-9vdbby6y.jpg"
+  },
+  {
+    "id": "1776750893373_jmkyco",
+    "identify_time": "2026-04-21T05:54:53.373Z",
+    "detect_mode": "image",
+    "class_name": "battery",
+    "display_name": "电池",
+    "category_group": "有害垃圾",
+    "confidence": 0.9207,
+    "confidence_text": "92.07%",
+    "advice": "请单独密封存放后投放至有害垃圾收集点，不要与普通生活垃圾混装。",
+    "track_id": null,
+    "stable_count": 0,
+    "hit_count": 0,
+    "source_file": "1776750893209-3wjinvdf.jpg"
+  },
+  {
+    "id": "1776744577044_51a6qp",
+    "identify_time": "2026-04-21T04:09:37.044Z",
+    "detect_mode": "image",
+    "class_name": "battery",
+    "display_name": "电池",
+    "category_group": "有害垃圾",
+    "confidence": 0.9207,
+    "confidence_text": "92.07%",
+    "advice": "请单独密封存放后投放至有害垃圾收集点，不要与普通生活垃圾混装。",
+    "track_id": null,
+    "stable_count": 0,
+    "hit_count": 0,
+    "source_file": "1776744574855-e8kkaubq.jpg"
+  }
+]

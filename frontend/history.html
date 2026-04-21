@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>历史记录 - 智能垃圾分类系统</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="index.html"><span class="brand-mark">♻</span><span>智能垃圾分类与回收处理系统</span></a>
+      <nav class="nav">
+        <a class="" href="index.html">首页</a>
+        <a class="" href="image.html">图片识别</a>
+        <a class="" href="video.html">视频识别</a>
+        <a class="" href="camera.html">摄像头识别</a>
+        <a class="" href="recycle.html">回收点</a>
+        <a class="" href="knowledge.html">分类科普</a>
+        <a class="active" href="history.html">历史记录</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap page-grid"><section class="card section-card"><div class="section-head"><div><span class="section-kicker">History Records</span><h2>历史记录</h2><p>保存识别时间、类别归属、置信度与建议内容，便于展示系统闭环能力。</p></div></div><div class="history-toolbar"><div class="field-wrap grow"><label class="field-label">搜索历史记录</label><input type="text" id="historyKeyword" placeholder="按类别、方式或建议搜索"></div><div class="row-btns history-actions"><button id="refreshHistoryBtn" class="btn btn-secondary">刷新</button><button id="clearHistoryBtn" class="btn btn-danger">清空</button></div></div><div class="table-shell"><table><thead><tr><th>时间</th><th>类别</th><th>归属</th><th>置信度</th><th>方式</th><th>建议</th><th>操作</th></tr></thead><tbody id="historyTableBody"></tbody></table></div><div class="table-note">注：图片识别、视频识别与摄像头识别的结果会自动写入历史记录中。</div></section></main>
+  <footer class="wrap footer">基于 Python、YOLOv8、Node.js 与前端多页面展示构建，已按 9 类垃圾体系重构，cardboard 已并入 paper。</footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

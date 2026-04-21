@@ -966,5 +966,5 @@
 /backend/node_modules/wrappy/README.md
 /backend/node_modules/wrappy/wrappy.js
 /backend/node_modules/.package-lock.json
-/README_实时识别优化说明.md
-/README_扩展功能说明.md
+/docs/README_实时识别优化说明.md
+/docs/README_扩展功能说明.md
