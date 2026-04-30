@@ -1,84 +1,72 @@
-import os
+from __future__ import annotations
+
+"""
+安全版数据划分脚本。
+
+作用：
+1. 从已经具备真实 YOLO 标签的数据集中划分 train/val/test；
+2. 绝不再生成“整图框”伪标注；
+3. 适合作为人工精标核心集或人工校正后的数据集整理脚本。
+"""
+
+import argparse
 import random
 import shutil
-from PIL import Image
+from pathlib import Path
 
-# 原始数据集路径（替换为解压后的路径）
-original_data_path = "D:/Download/garbage_classification-Simplify"
-# 目标路径
-target_path = "D:/Download/garbage-system-training-optimized/garbage_proj/dataset"
+IMAGE_EXTS = {'.jpg', '.jpeg', '.png', '.bmp', '.webp'}
 
-# 类别映射
-class_mapping = {
-    "battery": 0, "biological": 1, "cardboard": 2, "clothes": 3, "glass": 4,
-    "metal": 5, "paper": 6, "plastic": 7, "shoes": 8, "trash": 9
-}
 
-# 创建文件夹
-os.makedirs(f"{target_path}/images/train", exist_ok=True)
-os.makedirs(f"{target_path}/images/val", exist_ok=True)
-os.makedirs(f"{target_path}/labels/train", exist_ok=True)
-os.makedirs(f"{target_path}/labels/val", exist_ok=True)
+def collect_pairs(source_images: Path, source_labels: Path):
+    pairs = []
+    for img in source_images.rglob('*'):
+        if img.suffix.lower() not in IMAGE_EXTS:
+            continue
+        rel = img.relative_to(source_images)
+        label = (source_labels / rel).with_suffix('.txt')
+        if not label.exists():
+            continue
+        pairs.append((img, label, rel.name))
+    return pairs
 
-# 遍历所有类别文件夹
-for class_name, class_id in class_mapping.items():
-    class_folder = os.path.join(original_data_path, class_name)
-    if not os.path.exists(class_folder):
-        print(f"跳过不存在的类别：{class_name}")
-        continue
 
-    # 获取该类别下所有图片
-    image_files = [f for f in os.listdir(class_folder) if f.endswith((".jpg", ".png", ".jpeg"))]
-    # 随机划分训练/验证集（8:2）
-    random.shuffle(image_files)
-    train_size = int(len(image_files) * 0.8)
-    train_files = image_files[:train_size]
-    val_files = image_files[train_size:]
+def main():
+    parser = argparse.ArgumentParser(description='划分已具备真实标签的数据集，不生成伪标注。')
+    parser.add_argument('--source-images', required=True)
+    parser.add_argument('--source-labels', required=True)
+    parser.add_argument('--target', required=True)
+    parser.add_argument('--train-ratio', type=float, default=0.8)
+    parser.add_argument('--val-ratio', type=float, default=0.1)
+    parser.add_argument('--seed', type=int, default=42)
+    args = parser.parse_args()
 
-    # 处理训练集
-    for img_file in train_files:
-        img_path = os.path.join(class_folder, img_file)
-        # 复制图片到train目录
-        shutil.copy(img_path, os.path.join(target_path, "images/train", img_file))
-        # 生成YOLO格式标签（假设每个图片只有一个垃圾目标，占满画面）
-        img = Image.open(img_path)
-        w, h = img.size
-        # YOLO格式：class_id x_center y_center width height（归一化到0-1）
-        x_center = 0.5
-        y_center = 0.5
-        width = 1.0
-        height = 1.0
-        # 保存标签文件
-        label_file = os.path.splitext(img_file)[0] + ".txt"
-        with open(os.path.join(target_path, "labels/train", label_file), "w") as f:
-            f.write(f"{class_id} {x_center} {y_center} {width} {height}")
+    src_images = Path(args.source_images)
+    src_labels = Path(args.source_labels)
+    target = Path(args.target)
+    pairs = collect_pairs(src_images, src_labels)
+    if not pairs:
+        raise FileNotFoundError('未找到带真实标签的图片/标签对，脚本已停止。')
 
-    # 处理验证集（逻辑同训练集）
-    for img_file in val_files:
-        img_path = os.path.join(class_folder, img_file)
-        shutil.copy(img_path, os.path.join(target_path, "images/val", img_file))
-        img = Image.open(img_path)
-        w, h = img.size
-        x_center = 0.5
-        y_center = 0.5
-        width = 1.0
-        height = 1.0
-        label_file = os.path.splitext(img_file)[0] + ".txt"
-        with open(os.path.join(target_path, "labels/val", label_file), "w") as f:
-            f.write(f"{class_id} {x_center} {y_center} {width} {height}")
+    random.Random(args.seed).shuffle(pairs)
+    n = len(pairs)
+    train_n = int(n * args.train_ratio)
+    val_n = int(n * args.val_ratio)
+    splits = {
+        'train': pairs[:train_n],
+        'val': pairs[train_n:train_n + val_n],
+        'test': pairs[train_n + val_n:]
+    }
 
-# 生成data.yaml文件
-yaml_content = f"""
-# 数据集配置
-path: {os.path.abspath(target_path)}  # 数据集根路径
-train: images/train  # 训练图片路径
-val: images/val      # 验证图片路径
+    for split, items in splits.items():
+        (target / 'images' / split).mkdir(parents=True, exist_ok=True)
+        (target / 'labels' / split).mkdir(parents=True, exist_ok=True)
+        for img, label, name in items:
+            shutil.copy2(img, target / 'images' / split / name)
+            shutil.copy2(label, target / 'labels' / split / Path(name).with_suffix('.txt'))
 
-# 类别
-nc: {len(class_mapping)}  # 类别数
-names: {list(class_mapping.keys())}  # 类别名称
-"""
-with open(os.path.join(target_path, "data.yaml"), "w", encoding="utf-8") as f:
-    f.write(yaml_content)
+    print({k: len(v) for k, v in splits.items()})
+    print('已完成安全划分：仅复制真实标签，不生成任何整图伪标注。')
 
-print("数据集整理完成！")
+
+if __name__ == '__main__':
+    main()

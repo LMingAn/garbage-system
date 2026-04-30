@@ -3,26 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>智能垃圾分类与回收处理系统</title>
+  <title>智能垃圾分类识别系统</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body data-page="home">
   <header class="topbar">
     <div class="wrap topbar-inner">
-      <a class="brand" href="index.html"><span class="brand-mark">♻</span><span>智能垃圾分类与回收处理系统</span></a>
+      <a class="brand" href="index.html"><span class="brand-mark">R</span><span>智能垃圾分类识别系统</span></a>
       <nav class="nav">
-        <a class="active" href="index.html">首页</a>
-        <a class="" href="image.html">图片识别</a>
-        <a class="" href="video.html">视频识别</a>
-        <a class="" href="camera.html">摄像头识别</a>
-        <a class="" href="recycle.html">回收点</a>
-        <a class="" href="knowledge.html">分类科普</a>
-        <a class="" href="history.html">历史记录</a>
+        <a href="index.html">首页</a>
+        <a href="image.html">图片识别</a>
+        <a href="camera.html">实时识别</a>
+        <a href="history.html">历史记录</a>
+        <a href="knowledge.html">分类知识</a>
+        <a href="recycle.html">回收导航</a>
       </nav>
     </div>
   </header>
-  <section class="hero"><div class="wrap"><div class="hero-panel"><div class="hero-copy"><span class="hero-badge">毕业设计系统 · YOLOv8 多目标检测</span><h1>基于 Python 与 YOLOv8 的<br>智能垃圾分类与回收处理系统</h1><p>系统支持图片多目标识别、视频识别、摄像头实时识别、分类科普、历史记录与回收点检索，针对本科毕设场景进行了页面重构、按钮层级优化和实时识别流程优化。</p><div class="hero-actions"><a class="btn btn-light btn-lg" href="image.html">开始图片识别</a><a class="btn btn-ghost btn-lg" href="camera.html">打开实时演示</a></div><div class="chips"><span>YOLOv8 多目标检测</span><span>GTX1650 训练友好</span><span>9 类垃圾体系</span><span>视频框平滑与稳定确认</span></div></div><div class="hero-side"><div class="hero-stat-grid"><div class="hero-stat"><span>识别模式</span><strong>3 种</strong><em>图片 / 视频 / 摄像头</em></div><div class="hero-stat"><span>类别数量</span><strong>9 类</strong><em>cardboard 并入 paper</em></div><div class="hero-stat"><span>输出内容</span><strong>4 层</strong><em>检测 / 建议 / 科普 / 回收点</em></div><div class="hero-stat"><span>系统目标</span><strong>闭环处理</strong><em>识别到回收建议</em></div></div></div></div></div></section><main class="wrap page-grid"><section class="card"><div class="page-header"><div><h1>系统功能总览</h1><p>将原单页结构改为多页面结构，降低单页信息密度，便于答辩展示与实际使用。</p></div><div class="page-badge">多页面导航版</div></div><div class="feature-grid"><div class="feature-card"><h3>图片多目标识别</h3><p>上传单张图片，输出检测图、多个目标类别、置信度、垃圾大类和回收建议。</p><div class="cta-row"><a class="btn btn-primary" href="image.html">进入页面</a></div></div><div class="feature-card"><h3>视频识别与统计</h3><p>支持对视频进行逐段分析，返回结果视频、识别统计和处理速度信息。</p><div class="cta-row"><a class="btn btn-primary" href="video.html">进入页面</a></div></div><div class="feature-card"><h3>摄像头实时识别</h3><p>支持摄像头实时检测、框叠加显示、轻量跟踪重置与稳定结果展示。</p><div class="cta-row"><a class="btn btn-primary" href="camera.html">进入页面</a></div></div></div></section><section class="card"><div class="page-header"><div><h1>项目特点</h1><p>本次重构重点优化了视觉层次、按钮大小对比、信息密度与系统使用路径。</p></div></div><div class="mini-list"><div class="mini-item">前端改为首页 + 功能页分离的多页面结构，减少单页堆叠感。</div><div class="mini-item">整体元素尺寸缩小，卡片、按钮、标题、输入区更均衡，更适合桌面端展示。</div><div class="mini-item">保留 YOLOv8 检测主链路，支持图片、视频和摄像头三种模式统一联动。</div><div class="mini-item">识别结果可直接跳转到科普、回收点检索与历史记录，体现系统闭环能力。</div></div></section></main>
-  <footer class="wrap footer">基于 Python、YOLOv8、Node.js 与前端多页面展示构建，已按 9 类垃圾体系重构，cardboard 已并入 paper。</footer>
-  <script src="js/main.js"></script>
+
+  <main class="wrap page">
+    <section class="hero hero-home">
+      <div class="hero-copy">
+        <span class="tag hero-badge">YOLOv8 + Node.js + Python + 地图导航</span>
+        <h1 class="mt">智能垃圾分类识别与回收系统</h1>
+        <p>支持图片上传识别、摄像头实时识别、历史识别记录、分类知识和周边回收点导航，形成“识别、学习、投放”的完整闭环。</p>
+        <div class="actions">
+          <a class="btn primary" href="image.html">开始图片识别</a>
+          <a class="btn light" href="camera.html">打开实时识别</a>
+        </div>
+        <div class="hero-metrics">
+          <div><strong>8 类</strong><span>垃圾识别类别</span></div>
+          <div><strong>双模式</strong><span>图片 + 摄像头</span></div>
+          <div><strong>3 大扩展</strong><span>历史 / 科普 / 导航</span></div>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <h2>系统亮点</h2>
+        <ul class="feature-list">
+          <li><span>✓</span>自动记录每次识别结果，支持按类别、建议和方式检索。</li>
+          <li><span>✓</span>根据垃圾类别给出投放建议，并可跳转分类知识页面。</li>
+          <li><span>✓</span>摄像头识别固定中央推荐区域，减少背景干扰和误检。</li>
+          <li><span>✓</span>识别结果可继续查询附近回收点，辅助实际投放。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="home-section mt">
+      <div class="section-title">
+        <span>核心功能</span>
+        <h2>保留图片识别和摄像头实时识别两种入口</h2>
+      </div>
+      <div class="grid three">
+        <a class="card feature-card" href="image.html">
+          <div class="feature-icon">图</div>
+          <div class="card-title"><h2>图片识别</h2><span>上传检测</span></div>
+          <p class="muted">上传单张图片，返回类别、置信度、投放建议和识别框。</p>
+        </a>
+        <a class="card feature-card" href="camera.html">
+          <div class="feature-icon">摄</div>
+          <div class="card-title"><h2>实时识别</h2><span>摄像头</span></div>
+          <p class="muted">固定识别区域，实时绘制目标框，支持保存当前结果。</p>
+        </a>
+        <a class="card feature-card" href="history.html">
+          <div class="feature-icon">链</div>
+          <div class="card-title"><h2>信息闭环</h2><span>记录与导航</span></div>
+          <p class="muted">识别结果可进入历史记录、分类知识和附近回收点查询。</p>
+        </a>
+      </div>
+    </section>
+  </main>
 </body>
 </html>

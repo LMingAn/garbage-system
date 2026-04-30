@@ -3,26 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>摄像头识别 - 智能垃圾分类系统</title>
+  <title>实时识别 - 智能垃圾分类识别系统</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body data-page="camera">
   <header class="topbar">
     <div class="wrap topbar-inner">
-      <a class="brand" href="index.html"><span class="brand-mark">♻</span><span>智能垃圾分类与回收处理系统</span></a>
+      <a class="brand" href="index.html"><span class="brand-mark">R</span><span>智能垃圾分类识别系统</span></a>
       <nav class="nav">
-        <a class="" href="index.html">首页</a>
-        <a class="" href="image.html">图片识别</a>
-        <a class="" href="video.html">视频识别</a>
-        <a class="active" href="camera.html">摄像头识别</a>
-        <a class="" href="recycle.html">回收点</a>
-        <a class="" href="knowledge.html">分类科普</a>
-        <a class="" href="history.html">历史记录</a>
+        <a href="index.html">首页</a>
+        <a href="image.html">图片识别</a>
+        <a href="camera.html">实时识别</a>
+        <a href="history.html">历史记录</a>
+        <a href="knowledge.html">分类知识</a>
+        <a href="recycle.html">回收导航</a>
       </nav>
     </div>
   </header>
-  <main class="wrap page-grid"><section class="card section-card"><div class="section-head"><div><span class="section-kicker">Camera Realtime</span><h2>摄像头实时识别</h2><p>支持实时检测、框叠加显示、跟踪重置与目标稳定计数，适合答辩现场演示。</p></div><div class="section-tag warn">实时模式</div></div><div class="grid two equal"><div class="pane pane-input"><div class="camera-panel"><div class="preview-title">摄像头画面</div><div class="camera-wrap"><video id="cameraVideo" autoplay muted playsinline></video><canvas id="overlayCanvas"></canvas></div><div class="row-btns camera-actions"><button id="startCameraBtn" class="btn btn-primary btn-lg">开启摄像头</button><button id="stopCameraBtn" class="btn btn-secondary" disabled>关闭摄像头</button><button id="resetTrackerBtn" class="btn btn-ghost-dark" disabled>重置跟踪</button></div></div></div><div class="pane pane-output"><div id="cameraSummary" class="summary">暂无结果</div><div class="result-list-title">实时检测详情</div><div id="cameraDetections" class="detection-list"></div></div></div></section></main>
-  <footer class="wrap footer">基于 Python、YOLOv8、Node.js 与前端多页面展示构建，已按 9 类垃圾体系重构，cardboard 已并入 paper。</footer>
+
+  <main class="wrap page">
+    <div class="page-head">
+      <div>
+        <h1>实时识别</h1>
+        <p>摄像头画面会显示推荐识别区域，并在目标上绘制识别框。</p>
+      </div>
+      <span class="tag">固定 ROI</span>
+    </div>
+
+    <section class="grid two">
+      <div class="card">
+        <div class="card-title"><h2>摄像头画面</h2><span>实时检测</span></div>
+        <div class="camera-box">
+          <video id="cameraVideo" playsinline autoplay muted></video>
+          <canvas id="overlayCanvas"></canvas>
+        </div>
+        <div class="actions">
+          <button id="startCameraBtn" class="primary">开启摄像头</button>
+          <button id="stopCameraBtn" disabled>关闭摄像头</button>
+          <button id="snapshotRecordBtn" disabled>保存当前结果</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><h2>实时结果</h2><span id="cameraGroupResult">等待识别</span></div>
+        <div id="cameraEmpty" class="empty">开启摄像头后显示检测结果</div>
+        <div id="cameraResult" class="hidden">
+          <div class="result-main">
+            <div>
+              <div class="muted">当前类别</div>
+              <div id="cameraClassResult" class="result-name">-</div>
+            </div>
+            <div id="cameraConfResult" class="confidence">0%</div>
+          </div>
+          <div class="info-list">
+            <div class="info-row"><strong>稳定状态：</strong><span id="cameraStableState">-</span></div>
+            <div class="info-row"><strong>投放建议：</strong><span id="cameraAdviceResult">-</span></div>
+          </div>
+          <div class="actions">
+            <button id="cameraScienceBtn">查看分类知识</button>
+            <button id="cameraRecycleBtn">查询回收点</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
   <script src="js/main.js"></script>
 </body>
 </html>

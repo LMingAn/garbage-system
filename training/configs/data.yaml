@@ -1,8 +1,9 @@
-path: ../dataset
+# 数据集配置（9类：battery、biological、clothes、glass、metal、paper、plastic、shoes、trash）
+# 默认使用项目根目录下的 dataset 目录。
+path: ../../dataset/final_dataset
 train: images/train
 val: images/val
 test: images/test
-
 names:
   0: battery
   1: biological

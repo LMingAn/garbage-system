@@ -1,322 +1,486 @@
+const API_BASE = 'http://localhost:3000/api';
+const FIXED_CAMERA_ROI = { x: 0.28, y: 0.18, w: 0.44, h: 0.62 };
 
-const API = '/api';
-let currentImageFile = null;
-let currentVideoFile = null;
-let cameraStream = null;
-let cameraTimer = null;
-let frameBusy = false;
-const sessionId = `cam_${Date.now()}`;
-const overlayColors = ['#19c37d', '#ff7a59', '#6f5cff', '#f7b500', '#ef476f', '#06d6a0', '#118ab2'];
+const state = {
+  uploadResult: null,
+  uploadPredictions: [],
+  selectedFile: null,
+  stream: null,
+  detectTimer: null,
+  detectBusy: false,
+  cameraLastResult: null,
+  cameraSessionId: `cam_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+  cameraSourceSize: null,
+  geo: null,
+  scienceRows: [],
+};
 
-const el = (id) => document.getElementById(id);
-const has = (id) => Boolean(el(id));
+const $ = (id) => document.getElementById(id);
+const page = document.body.dataset.page;
 
-function renderDetections(containerId, detections = []) {
-  const box = el(containerId);
-  if (!box) return;
-  box.innerHTML = '';
-  if (!detections.length) {
-    box.innerHTML = '<div class="detection-item">未检测到目标。</div>';
-    return;
-  }
-  detections.forEach((item) => {
-    const div = document.createElement('div');
-    div.className = 'detection-item';
-    div.innerHTML = `
-      <strong>${item.class_name_zh || item.class_name}</strong>
-      <div>垃圾大类：${item.category_group || '--'}</div>
-      <div>置信度：${item.confidence_text || ((item.confidence || 0) * 100).toFixed(2) + '%'}</div>
-      <div>建议：${item.advice || '--'}</div>
-      <div>Track ID：${item.track_id ?? '--'} / 稳定计数：${item.stable_count ?? '--'}</div>
-      ${item.hit_count ? `<div>视频累计出现：${item.hit_count} 次</div>` : ''}
-    `;
-    box.appendChild(div);
+document.addEventListener('DOMContentLoaded', () => {
+  if (page === 'image') initImagePage();
+  if (page === 'camera') initCameraPage();
+  if (page === 'history') initHistoryPage();
+  if (page === 'knowledge') initKnowledgePage();
+  if (page === 'recycle') initRecyclePage();
+});
+
+function show(el, visible) {
+  if (!el) return;
+  el.classList.toggle('hidden', !visible);
+}
+
+async function api(path, options) {
+  const res = await fetch(`${API_BASE}${path}`, options);
+  const data = await res.json();
+  if (data.code && data.code !== 200) throw new Error(data.msg || '请求失败');
+  return data.data;
+}
+
+function initImagePage() {
+  const uploadArea = $('uploadArea');
+  const imageInput = $('imageInput');
+  const predictBtn = $('predictBtn');
+
+  uploadArea.addEventListener('click', () => imageInput.click());
+  uploadArea.addEventListener('dragover', (event) => {
+    event.preventDefault();
+    uploadArea.classList.add('dragover');
+  });
+  uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+  uploadArea.addEventListener('drop', (event) => {
+    event.preventDefault();
+    uploadArea.classList.remove('dragover');
+    const file = event.dataTransfer.files?.[0];
+    if (file && file.type.startsWith('image/')) setSelectedImage(file);
+  });
+  imageInput.addEventListener('change', () => {
+    const file = imageInput.files?.[0];
+    if (file) setSelectedImage(file);
+  });
+  $('previewImage').addEventListener('load', drawUploadBoxes);
+  predictBtn.addEventListener('click', predictUpload);
+  $('scienceBtn').addEventListener('click', () => {
+    if (state.uploadResult) location.href = `knowledge.html?q=${encodeURIComponent(state.uploadResult.class_name)}`;
+  });
+  $('recycleBtn').addEventListener('click', () => {
+    if (state.uploadResult) location.href = `recycle.html?class_name=${encodeURIComponent(state.uploadResult.class_name)}`;
   });
 }
 
-function setSummary(id, text) {
-  if (!has(id)) return;
-  el(id).textContent = text || '暂无结果';
+function setSelectedImage(file) {
+  state.selectedFile = file;
+  state.uploadResult = null;
+  state.uploadPredictions = [];
+  $('previewImage').src = URL.createObjectURL(file);
+  show($('previewBox'), true);
+  show($('uploadError'), false);
+  show($('uploadEmpty'), true);
+  show($('uploadResult'), false);
+  $('predictBtn').disabled = false;
 }
 
-async function api(url, options = {}) {
-  const response = await fetch(url, options);
-  const contentType = response.headers.get('content-type') || '';
-  const text = await response.text();
-
-  if (!contentType.includes('application/json')) {
-    throw new Error(`接口未返回 JSON，请确认前端是通过 Node 后端访问，当前返回：${text.slice(0, 120)}`);
-  }
-
-  let data;
+async function predictUpload() {
+  if (!state.selectedFile) return;
+  const btn = $('predictBtn');
+  btn.disabled = true;
+  btn.textContent = '识别中...';
+  show($('uploadError'), false);
   try {
-    data = JSON.parse(text);
+    const form = new FormData();
+    form.append('image', state.selectedFile);
+    const data = await api('/predict/upload', { method: 'POST', body: form });
+    state.uploadResult = data;
+    state.uploadPredictions = Array.isArray(data.predictions) ? data.predictions : [];
+    renderUploadResult(data);
+    drawUploadBoxes();
   } catch (error) {
-    throw new Error(`JSON 解析失败：${text.slice(0, 120)}`);
+    $('uploadError').textContent = error.message || '识别失败';
+    show($('uploadError'), true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '开始识别';
   }
-
-  if (!response.ok || data.code !== 200) {
-    throw new Error(data.msg || '请求失败');
-  }
-  return data.data ?? null;
 }
 
-function drawOverlay(detections = []) {
-  const video = el('cameraVideo');
-  const canvas = el('overlayCanvas');
-  if (!video || !canvas || !video.videoWidth || !video.videoHeight) return;
-  canvas.width = video.clientWidth;
-  canvas.height = video.clientHeight;
+function renderUploadResult(result) {
+  show($('uploadEmpty'), false);
+  show($('uploadResult'), true);
+  $('classResult').textContent = result.display_name || result.class_name || '-';
+  $('confResult').textContent = result.confidence_text || percent(result.confidence);
+  $('adviceResult').textContent = result.advice || '-';
+  $('resultGroup').textContent = result.category_group || '-';
+  $('boxCount').textContent = state.uploadPredictions.length;
+  $('boxList').innerHTML = state.uploadPredictions.map(item => `
+    <div class="box-row">
+      <span>${escapeHtml(item.display_name || item.class_name || '-')}</span>
+      <strong>${escapeHtml(item.confidence_text || percent(item.confidence))}</strong>
+    </div>
+  `).join('');
+}
+
+function drawUploadBoxes() {
+  const img = $('previewImage');
+  const canvas = $('uploadCanvas');
+  if (!img || !canvas || !img.clientWidth || !img.clientHeight) return;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.round(img.clientWidth * dpr);
+  canvas.height = Math.round(img.clientHeight * dpr);
+  canvas.style.width = `${img.clientWidth}px`;
+  canvas.style.height = `${img.clientHeight}px`;
   const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const scaleX = canvas.width / video.videoWidth;
-  const scaleY = canvas.height / video.videoHeight;
-
-  detections.forEach((det, index) => {
-    const color = overlayColors[(det.track_id || index) % overlayColors.length];
-    const [x1, y1, x2, y2] = det.bbox || [];
-    if ([x1, y1, x2, y2].some((v) => Number.isNaN(Number(v)))) return;
-    const sx = x1 * scaleX;
-    const sy = y1 * scaleY;
-    const sw = (x2 - x1) * scaleX;
-    const sh = (y2 - y1) * scaleY;
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
-    ctx.strokeRect(sx, sy, sw, sh);
-    ctx.fillStyle = color;
-    const label = `${det.class_name_zh || det.class_name} ${(det.confidence * 100).toFixed(1)}%`;
-    ctx.fillRect(sx, Math.max(0, sy - 22), Math.max(110, label.length * 8), 22);
-    ctx.fillStyle = '#111';
-    ctx.font = '12px sans-serif';
-    ctx.fillText(label, sx + 6, Math.max(14, sy - 7));
-  });
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, img.clientWidth, img.clientHeight);
+  if (!state.uploadPredictions.length) return;
+  const sourceW = Number(state.uploadResult?.source_size?.width || img.naturalWidth);
+  const sourceH = Number(state.uploadResult?.source_size?.height || img.naturalHeight);
+  const fit = containRect(img.clientWidth, img.clientHeight, sourceW, sourceH);
+  state.uploadPredictions.forEach((item, index) => drawDetectionBox(ctx, item, fit, sourceW, sourceH, index));
 }
 
-if (has('imageInput')) {
-  el('imageInput').addEventListener('change', (e) => {
-    currentImageFile = e.target.files?.[0] || null;
-    if (!currentImageFile) return;
-    const reader = new FileReader();
-    reader.onload = () => { if (has('imagePreview')) el('imagePreview').src = reader.result; };
-    reader.readAsDataURL(currentImageFile);
+function initCameraPage() {
+  $('startCameraBtn').addEventListener('click', startCamera);
+  $('stopCameraBtn').addEventListener('click', stopCamera);
+  $('snapshotRecordBtn').addEventListener('click', saveCameraRecord);
+  $('cameraScienceBtn').addEventListener('click', () => {
+    if (state.cameraLastResult) location.href = `knowledge.html?q=${encodeURIComponent(state.cameraLastResult.class_name)}`;
   });
-}
-
-if (has('imageDetectBtn')) {
-  el('imageDetectBtn').addEventListener('click', async () => {
-    if (!currentImageFile) return alert('请先选择图片');
-    const form = new FormData();
-    form.append('image', currentImageFile);
-    setSummary('imageSummary', '图片识别中...');
-    try {
-      const data = await api(`${API}/predict/image`, { method: 'POST', body: form });
-      setSummary('imageSummary', data.summary ? `主目标：${data.summary.class_name_zh} / ${data.summary.confidence_text} / ${data.summary.category_group}` : '未检测到目标');
-      if (data.saved_path && has('imageResult')) el('imageResult').src = data.saved_path;
-      renderDetections('imageDetections', data.detections);
-      if (data.summary?.map_keyword && has('recycleKeyword')) el('recycleKeyword').value = data.summary.map_keyword;
-    } catch (error) {
-      setSummary('imageSummary', error.message);
-    }
+  $('cameraRecycleBtn').addEventListener('click', () => {
+    if (state.cameraLastResult) location.href = `recycle.html?class_name=${encodeURIComponent(state.cameraLastResult.class_name)}`;
   });
-}
-
-if (has('videoInput')) {
-  el('videoInput').addEventListener('change', (e) => {
-    currentVideoFile = e.target.files?.[0] || null;
-  });
-}
-
-if (has('videoDetectBtn')) {
-  el('videoDetectBtn').addEventListener('click', async () => {
-    if (!currentVideoFile) return alert('请先选择视频');
-    const form = new FormData();
-    form.append('video', currentVideoFile);
-    form.append('frame_stride', has('videoStride') ? (el('videoStride').value || '2') : '2');
-    setSummary('videoSummary', '视频分析中，可能需要几分钟...');
-    try {
-      const data = await api(`${API}/predict/video`, { method: 'POST', body: form });
-      setSummary('videoSummary', `视频分析完成，原视频FPS=${data.fps || '--'}，处理速度=${data.avg_process_fps || '--'} FPS`);
-      if (data.saved_path && has('videoResult')) el('videoResult').src = data.saved_path;
-      renderDetections('videoDetections', data.detections);
-    } catch (error) {
-      setSummary('videoSummary', error.message);
-    }
-  });
+  window.addEventListener('resize', syncCameraOverlay);
+  window.addEventListener('beforeunload', stopCamera);
 }
 
 async function startCamera() {
-  cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-  const video = el('cameraVideo');
-  video.srcObject = cameraStream;
-  await video.play();
-  await api(`${API}/tracker/reset`, {
+  try {
+    state.stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false,
+    });
+    const video = $('cameraVideo');
+    video.srcObject = state.stream;
+    await video.play();
+    $('startCameraBtn').disabled = true;
+    $('stopCameraBtn').disabled = false;
+    $('snapshotRecordBtn').disabled = false;
+    syncCameraOverlay();
+    state.detectTimer = setInterval(runCameraDetect, 950);
+  } catch (error) {
+    alert('摄像头启动失败，请检查浏览器权限。');
+  }
+}
+
+function stopCamera() {
+  if (state.detectTimer) clearInterval(state.detectTimer);
+  state.detectTimer = null;
+  state.detectBusy = false;
+  if (state.stream) state.stream.getTracks().forEach(track => track.stop());
+  state.stream = null;
+  const video = $('cameraVideo');
+  if (video) video.srcObject = null;
+  const canvas = $('overlayCanvas');
+  if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  if ($('startCameraBtn')) $('startCameraBtn').disabled = false;
+  if ($('stopCameraBtn')) $('stopCameraBtn').disabled = true;
+  if ($('snapshotRecordBtn')) $('snapshotRecordBtn').disabled = true;
+}
+
+function syncCameraOverlay() {
+  const video = $('cameraVideo');
+  const canvas = $('overlayCanvas');
+  if (!video || !canvas || !video.videoWidth) return;
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  drawCameraPredictions(state.cameraLastResult?.predictions || []);
+}
+
+async function runCameraDetect() {
+  const video = $('cameraVideo');
+  if (state.detectBusy || !state.stream || !video.videoWidth) return;
+  state.detectBusy = true;
+  try {
+    const capture = document.createElement('canvas');
+    capture.width = Math.min(640, video.videoWidth);
+    capture.height = Math.round(capture.width * video.videoHeight / video.videoWidth);
+    capture.getContext('2d').drawImage(video, 0, 0, capture.width, capture.height);
+    const data = await api('/predict/camera', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        base64: capture.toDataURL('image/jpeg', 0.76),
+        saveRecord: false,
+        session_id: state.cameraSessionId,
+      }),
+    });
+    state.cameraLastResult = data;
+    state.cameraSourceSize = data.source_size || null;
+    renderCameraResult(data);
+    syncCameraOverlay();
+  } catch (error) {
+    console.error('camera detect failed', error);
+  } finally {
+    state.detectBusy = false;
+  }
+}
+
+function renderCameraResult(result) {
+  show($('cameraEmpty'), false);
+  show($('cameraResult'), true);
+  $('cameraClassResult').textContent = result.display_name || result.class_name || '-';
+  $('cameraConfResult').textContent = result.confidence_text || percent(result.confidence);
+  $('cameraGroupResult').textContent = result.category_group || '-';
+  $('cameraAdviceResult').textContent = result.advice || '-';
+  $('cameraStableState').textContent = `${result.stable ? '已稳定' : '观察中'}，连续 ${result.stable_count || 1} 帧`;
+}
+
+function drawCameraPredictions(predictions) {
+  const canvas = $('overlayCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawRoi(ctx, canvas.width, canvas.height);
+  const sourceW = Number(state.cameraSourceSize?.width || canvas.width);
+  const sourceH = Number(state.cameraSourceSize?.height || canvas.height);
+  const fit = { x: 0, y: 0, scale: canvas.width / sourceW, scaleY: canvas.height / sourceH };
+  predictions.slice(0, 3).forEach((item, index) => drawDetectionBox(ctx, item, fit, sourceW, sourceH, index));
+}
+
+function drawRoi(ctx, width, height) {
+  const x = FIXED_CAMERA_ROI.x * width;
+  const y = FIXED_CAMERA_ROI.y * height;
+  const w = FIXED_CAMERA_ROI.w * width;
+  const h = FIXED_CAMERA_ROI.h * height;
+  ctx.save();
+  ctx.fillStyle = 'rgba(15,23,42,.22)';
+  ctx.fillRect(0, 0, width, height);
+  ctx.clearRect(x, y, w, h);
+  ctx.strokeStyle = 'rgba(255,255,255,.9)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([10, 8]);
+  ctx.strokeRect(x, y, w, h);
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 16px Microsoft YaHei';
+  ctx.fillText('推荐识别区域', x + 8, Math.max(22, y - 10));
+  ctx.restore();
+}
+
+async function saveCameraRecord() {
+  const video = $('cameraVideo');
+  if (!state.cameraLastResult || !video.videoWidth) return;
+  const capture = document.createElement('canvas');
+  capture.width = Math.min(640, video.videoWidth);
+  capture.height = Math.round(capture.width * video.videoHeight / video.videoWidth);
+  capture.getContext('2d').drawImage(video, 0, 0, capture.width, capture.height);
+  await api('/predict/camera', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session_id: sessionId })
+    body: JSON.stringify({
+      base64: capture.toDataURL('image/jpeg', 0.76),
+      saveRecord: true,
+      session_id: state.cameraSessionId,
+    }),
   });
-  if (has('startCameraBtn')) el('startCameraBtn').disabled = true;
-  if (has('stopCameraBtn')) el('stopCameraBtn').disabled = false;
-  if (has('resetTrackerBtn')) el('resetTrackerBtn').disabled = false;
-  cameraTimer = setInterval(sendFrameForDetect, 600);
+  alert('已保存到历史记录。');
 }
 
-async function stopCamera() {
-  if (cameraTimer) clearInterval(cameraTimer);
-  cameraTimer = null;
-  if (cameraStream) {
-    cameraStream.getTracks().forEach((t) => t.stop());
-    cameraStream = null;
-  }
-  drawOverlay([]);
-  if (has('startCameraBtn')) el('startCameraBtn').disabled = false;
-  if (has('stopCameraBtn')) el('stopCameraBtn').disabled = true;
-  if (has('resetTrackerBtn')) el('resetTrackerBtn').disabled = true;
-  setSummary('cameraSummary', '摄像头已关闭');
-}
-
-async function sendFrameForDetect() {
-  if (frameBusy || !cameraStream) return;
-  frameBusy = true;
-  try {
-    const video = el('cameraVideo');
-    if (!video || !video.videoWidth || !video.videoHeight) return;
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const base64 = canvas.toDataURL('image/jpeg', 0.75);
-    const data = await api(`${API}/predict/frame`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ base64, session_id: sessionId })
-    });
-    drawOverlay(data.detections || []);
-    setSummary('cameraSummary', data.summary ? `主目标：${data.summary.class_name_zh || data.summary.class_name} / ${data.summary.confidence_text} / 稳定计数 ${data.summary.stable_count || 0}` : `稳定目标数：${data.stable_count || 0}`);
-    renderDetections('cameraDetections', data.detections);
-  } catch (error) {
-    setSummary('cameraSummary', error.message);
-  } finally {
-    frameBusy = false;
-  }
-}
-
-if (has('startCameraBtn')) el('startCameraBtn').addEventListener('click', () => startCamera().catch((err) => alert(err.message)));
-if (has('stopCameraBtn')) el('stopCameraBtn').addEventListener('click', stopCamera);
-if (has('resetTrackerBtn')) {
-  el('resetTrackerBtn').addEventListener('click', async () => {
-    await api(`${API}/tracker/reset`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ session_id: sessionId })
-    });
-    setSummary('cameraSummary', '跟踪状态已重置');
-  });
-}
-
-async function loadKnowledge() {
-  if (!has('knowledgeGrid')) return;
-  const q = has('knowledgeSearch') ? el('knowledgeSearch').value.trim() : '';
-  const data = await api(`${API}/knowledge?q=${encodeURIComponent(q)}`);
-  const grid = el('knowledgeGrid');
-  grid.innerHTML = '';
-  if (!data.length) {
-    grid.innerHTML = '<div class="empty-state">没有匹配到相关科普内容。</div>';
-    return;
-  }
-  data.forEach((item) => {
-    const div = document.createElement('div');
-    div.className = 'knowledge-card';
-    div.innerHTML = `
-      <h3>${item.name}</h3>
-      <div>大类：${item.group}</div>
-      <p>${item.definition}</p>
-      <p><strong>示例：</strong>${(item.examples || []).join('、')}</p>
-      <p><strong>危害：</strong>${item.hazard || '--'}</p>
-      <p><strong>价值：</strong>${item.value || '--'}</p>
-      <p><strong>回收建议：</strong>${item.advice}</p>
-    `;
-    grid.appendChild(div);
-  });
-}
-
-async function searchRecyclePoints() {
-  if (!has('recycleKeyword') || !has('recyclePoints')) return;
-  const keyword = el('recycleKeyword').value.trim();
-  const city = has('recycleCity') ? el('recycleCity').value.trim() : '';
-  if (!keyword) return alert('请输入查询关键词');
-  if (has('recyclePointTips')) el('recyclePointTips').textContent = '查询中...';
-  try {
-    const rows = await api(`${API}/recycle-points?keyword=${encodeURIComponent(keyword)}&city=${encodeURIComponent(city)}`);
-    const box = el('recyclePoints');
-    box.innerHTML = '';
-    if (!rows.length) {
-      box.innerHTML = '<div class="knowledge-card">当前未查询到结果。若已配置高德 Web Key，请检查关键词或城市。</div>';
-    } else {
-      rows.forEach((item) => {
-        const div = document.createElement('div');
-        div.className = 'knowledge-card';
-        div.innerHTML = `
-          <h3>${item.name || '未知点位'}</h3>
-          <p><strong>地址：</strong>${item.address || '--'}</p>
-          <p><strong>类型：</strong>${item.type || '--'}</p>
-          <p><strong>位置：</strong>${item.location || '--'}</p>
-        `;
-        box.appendChild(div);
-      });
-    }
-    if (has('recyclePointTips')) el('recyclePointTips').textContent = `共返回 ${rows.length} 个结果`;
-  } catch (error) {
-    if (has('recyclePointTips')) el('recyclePointTips').textContent = error.message;
-  }
+function initHistoryPage() {
+  $('historySearchInput').addEventListener('input', debounce(loadHistory, 250));
+  $('historyModeFilter').addEventListener('change', loadHistory);
+  $('clearHistoryBtn').addEventListener('click', clearHistory);
+  loadHistory();
 }
 
 async function loadHistory() {
-  if (!has('historyTableBody')) return;
-  const keyword = has('historyKeyword') ? el('historyKeyword').value.trim() : '';
-  const rows = await api(`${API}/history?keyword=${encodeURIComponent(keyword)}`);
-  const tbody = el('historyTableBody');
-  tbody.innerHTML = '';
-  if (!rows.length) {
-    tbody.innerHTML = '<tr><td colspan="7">暂无历史记录</td></tr>';
-    return;
-  }
-  rows.forEach((row) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${row.identify_time || '--'}</td>
-      <td>${row.display_name || row.class_name}</td>
-      <td>${row.category_group || '--'}</td>
-      <td>${row.confidence_text || '--'}</td>
-      <td>${row.detect_mode || '--'}</td>
-      <td>${row.advice || '--'}</td>
-      <td><button class="btn btn-danger" data-id="${row.id}">删除</button></td>
-    `;
-    tr.querySelector('button').addEventListener('click', async () => {
-      try {
-        await api(`${API}/history/${row.id}`, { method: 'DELETE' });
-        await loadHistory();
-      } catch (error) {
-        alert(error.message);
-      }
+  const params = new URLSearchParams();
+  if ($('historySearchInput').value.trim()) params.set('q', $('historySearchInput').value.trim());
+  if ($('historyModeFilter').value) params.set('mode', $('historyModeFilter').value);
+  const rows = await api(`/history?${params.toString()}`);
+  $('historyTableBody').innerHTML = rows.map(item => `
+    <tr>
+      <td>${escapeHtml(item.display_name || item.class_name || '-')}</td>
+      <td>${escapeHtml(item.category_group || '-')}</td>
+      <td>${escapeHtml(item.confidence_text || percent(item.confidence))}</td>
+      <td>${item.detect_mode === 'upload' ? '图片上传' : '摄像头识别'}</td>
+      <td>${formatDate(item.identify_time)}</td>
+      <td>${escapeHtml(item.advice || '-')}</td>
+      <td><button class="danger" data-delete-id="${escapeHtml(item.id)}">删除</button></td>
+    </tr>
+  `).join('');
+  show($('historyEmpty'), rows.length === 0);
+  document.querySelectorAll('[data-delete-id]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await api(`/history/${encodeURIComponent(btn.dataset.deleteId)}`, { method: 'DELETE' });
+      loadHistory();
     });
-    tbody.appendChild(tr);
   });
 }
 
-if (has('knowledgeSearch')) el('knowledgeSearch').addEventListener('input', () => loadKnowledge().catch(console.error));
-if (has('searchRecycleBtn')) el('searchRecycleBtn').addEventListener('click', () => searchRecyclePoints().catch(console.error));
-if (has('refreshHistoryBtn')) el('refreshHistoryBtn').addEventListener('click', () => loadHistory().catch(console.error));
-if (has('clearHistoryBtn')) {
-  el('clearHistoryBtn').addEventListener('click', async () => {
-    try {
-      await api(`${API}/history`, { method: 'DELETE' });
-      await loadHistory();
-    } catch (error) {
-      alert(error.message);
-    }
+async function clearHistory() {
+  if (!confirm('确定清空全部历史记录吗？')) return;
+  await api('/history', { method: 'DELETE' });
+  loadHistory();
+}
+
+function initKnowledgePage() {
+  const q = new URLSearchParams(location.search).get('q') || '';
+  $('scienceSearchInput').value = q;
+  $('scienceSearchInput').addEventListener('input', () => renderScience(state.scienceRows));
+  loadScience().then(rows => renderScience(rows));
+}
+
+async function loadScience() {
+  state.scienceRows = await api('/knowledge');
+  return state.scienceRows;
+}
+
+function renderScience(rows) {
+  const q = ($('scienceSearchInput')?.value || '').trim().toLowerCase();
+  const filtered = rows.filter(item => {
+    if (!q) return true;
+    return [item.slug, item.title, item.group, item.definition, ...(item.examples || [])].join(' ').toLowerCase().includes(q);
+  });
+  $('scienceGrid').innerHTML = filtered.map(item => `
+    <article class="card knowledge-card">
+      <div class="card-title"><h2>${escapeHtml(item.title)}</h2><span>${escapeHtml(item.group || '-')}</span></div>
+      <p><strong>定义：</strong>${escapeHtml(item.definition || '-')}</p>
+      <p><strong>示例：</strong>${escapeHtml((item.examples || []).join('、') || '-')}</p>
+      <p><strong>危害：</strong>${escapeHtml(item.hazard || '-')}</p>
+      <p><strong>价值：</strong>${escapeHtml(item.value || '-')}</p>
+    </article>
+  `).join('');
+}
+
+function initRecyclePage() {
+  const params = new URLSearchParams(location.search);
+  const selected = params.get('class_name') || '';
+  loadScience().then(rows => {
+    $('recycleClassSelect').innerHTML = rows.map(item => `
+      <option value="${escapeHtml(item.slug)}">${escapeHtml(item.title)}</option>
+    `).join('');
+    if (selected) $('recycleClassSelect').value = selected;
+  });
+  $('searchRecycleBtn').addEventListener('click', () => loadRecyclePoints($('recycleClassSelect').value));
+  if (selected) setTimeout(() => loadRecyclePoints(selected), 300);
+}
+
+async function ensureGeo() {
+  if (state.geo) return state.geo;
+  if (!navigator.geolocation) return null;
+  return new Promise(resolve => {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        state.geo = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        resolve(state.geo);
+      },
+      () => resolve(null),
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+    );
   });
 }
 
-loadKnowledge().catch(() => {});
-loadHistory().catch(() => {});
+async function loadRecyclePoints(className) {
+  if (!className) return;
+  $('recycleStatus').textContent = '查询中';
+  $('recycleResult').className = 'info-list';
+  $('recycleResult').innerHTML = '<div class="info-row">正在查询附近回收点...</div>';
+  const geo = await ensureGeo();
+  const params = new URLSearchParams({ class_name: className });
+  if (geo) {
+    params.set('lat', geo.lat);
+    params.set('lng', geo.lng);
+  }
+  const info = await api(`/recycle-points?${params.toString()}`);
+  $('recycleStatus').textContent = info.provider || '查询完成';
+  const points = info.points || [];
+  $('recycleResult').innerHTML = `
+    <div class="info-row">${escapeHtml(info.tips || '已生成地图查询入口')}</div>
+    <div class="actions">
+      <a class="btn primary" target="_blank" href="${escapeAttr(info.amapNav || '#')}">高德地图</a>
+      <a class="btn" target="_blank" href="${escapeAttr(info.baiduNav || '#')}">百度地图</a>
+    </div>
+    <div class="point-list mt">
+      ${points.length ? points.map(point => `
+        <div class="info-row">
+          <strong>${escapeHtml(point.name || '-')}</strong><br>
+          <span class="muted">${escapeHtml(point.address || '暂无地址')} ${point.distance ? `，约 ${escapeHtml(point.distance)} 米` : ''}</span>
+        </div>
+      `).join('') : '<div class="info-row muted">暂无真实点位列表，可使用上方地图入口继续查询。</div>'}
+    </div>
+  `;
+}
+
+function containRect(viewW, viewH, sourceW, sourceH) {
+  const scale = Math.min(viewW / sourceW, viewH / sourceH);
+  return {
+    x: (viewW - sourceW * scale) / 2,
+    y: (viewH - sourceH * scale) / 2,
+    scale,
+    scaleY: scale,
+  };
+}
+
+function drawDetectionBox(ctx, item, fit, sourceW, sourceH, index = 0) {
+  if (!Array.isArray(item.bbox) || item.bbox.length !== 4) return;
+  let [x1, y1, x2, y2] = item.bbox.map(Number);
+  if (x2 <= 1 && y2 <= 1) {
+    x1 *= sourceW; x2 *= sourceW; y1 *= sourceH; y2 *= sourceH;
+  }
+  const sx = fit.scale;
+  const sy = fit.scaleY || fit.scale;
+  const x = fit.x + x1 * sx;
+  const y = fit.y + y1 * sy;
+  const w = (x2 - x1) * sx;
+  const h = (y2 - y1) * sy;
+  if (w <= 0 || h <= 0) return;
+  const colors = ['#16a34a', '#2563eb', '#d97706', '#7c3aed'];
+  const color = colors[index % colors.length];
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = color;
+  ctx.fillStyle = `${color}22`;
+  ctx.strokeRect(x, y, w, h);
+  ctx.fillRect(x, y, w, h);
+  const label = `${item.display_name || item.class_name || '-'} ${item.confidence_text || percent(item.confidence)}`;
+  ctx.font = 'bold 14px Microsoft YaHei';
+  const tw = ctx.measureText(label).width + 14;
+  const ty = Math.max(0, y - 26);
+  ctx.fillStyle = color;
+  ctx.fillRect(x, ty, tw, 22);
+  ctx.fillStyle = '#fff';
+  ctx.fillText(label, x + 7, ty + 16);
+}
+
+function percent(value) {
+  return `${(Number(value || 0) * 100).toFixed(2)}%`;
+}
+
+function formatDate(str) {
+  const date = new Date(str);
+  if (Number.isNaN(date.getTime())) return '-';
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function debounce(fn, wait) {
+  let timer = null;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), wait);
+  };
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (ch) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }[ch]));
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value).replace(/`/g, '&#96;');
+}

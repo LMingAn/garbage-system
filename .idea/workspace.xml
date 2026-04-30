@@ -4,57 +4,333 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="812821bc-d717-45c9-8645-5b2a00a9d3c5" name="更改" comment="v3（大幅重构）" />
+    <list default="true" id="bd144f51-ad5e-43a5-8fd9-494871b00bc7" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/P20260421-135530.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/model/seed_best.pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/model/seed_best_3060_laptop.pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dataset/prepare_labelimg_review.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dataset/seed_dataset/classes.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dataset/unlabeled_pool/failed.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dataset/unlabeled_pool/manifest.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/README_实时识别优化说明.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/README_扩展功能说明.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/README_项目总览.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/伪标注优化训练方案.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/数据清洗划分与训练详细步骤.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/项目清理说明.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/v1.pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/v2.pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/.ultralytics/Ultralytics/Arial.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/.ultralytics/Ultralytics/persistent_cache.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/.ultralytics/Ultralytics/settings.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/BoxF1_curve.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/BoxPR_curve.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/BoxP_curve.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/BoxR_curve.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/args.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/confusion_matrix.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/confusion_matrix_normalized.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/results.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/results.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/train_batch0.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/train_batch1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/train_batch2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/val_batch0_labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/val_batch0_pred.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/val_batch1_labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/val_batch1_pred.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/val_batch2_labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/val_batch2_pred.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/weights/best.pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/final_model/weights/last.pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/BoxF1_curve.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/BoxPR_curve.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/BoxP_curve.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/BoxR_curve.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/args.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/confusion_matrix.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/confusion_matrix_normalized.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/results.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/results.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/train_batch0.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/train_batch1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/train_batch17730.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/train_batch17731.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/train_batch17732.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/train_batch2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/train_batch4900.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/train_batch4901.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/train_batch4902.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/val_batch0_labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/val_batch0_pred.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/val_batch1_labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/val_batch1_pred.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/val_batch2_labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/val_batch2_pred.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/weights/best.pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model/weights/last.pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/BoxF1_curve.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/BoxPR_curve.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/BoxP_curve.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/BoxR_curve.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/args.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/confusion_matrix.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/confusion_matrix_normalized.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/results.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/results.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/train_batch0.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/train_batch1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/train_batch12375.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/train_batch12376.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/train_batch12377.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/train_batch2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/train_batch20295.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/train_batch20296.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/train_batch20297.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/val_batch0_labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/val_batch0_pred.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/val_batch1_labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/val_batch1_pred.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/val_batch2_labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/val_batch2_pred.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/weights/best.pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop/weights/last.pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/BoxF1_curve.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/BoxPR_curve.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/BoxP_curve.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/BoxR_curve.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/args.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/confusion_matrix.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/confusion_matrix_normalized.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/results.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/results.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/train_batch0.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/train_batch1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/train_batch1485.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/train_batch1486.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/train_batch1487.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/train_batch2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/train_batch2475.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/train_batch2476.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/train_batch2477.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/val_batch0_labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/val_batch0_pred.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/val_batch1_labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/val_batch1_pred.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/val_batch2_labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/val_batch2_pred.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/weights/best.pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/runs/seed_model_3060_laptop_warmup/weights/last.pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/scripts/clean_dataset.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/scripts/generate_pseudo_labels.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/scripts/generate_pseudo_labels_3060_laptop.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/scripts/merge_and_split_dataset.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/scripts/train_final_model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/scripts/train_seed_model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/scripts/train_seed_model_3060_laptop.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/scripts/yolov8n.pt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/garbage-system.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.env" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.env.example" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/config/category_meta.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/config/category_meta.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/config/recycle_advice.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/config/recycle_advice.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/data/history.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/data/history.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/model/PUT_YOUR_BEST_PT_HERE.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/model/best.pt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/model/best.pt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/node_modules/dotenv/CHANGELOG.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/node_modules/dotenv/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/node_modules/dotenv/README-es.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/node_modules/dotenv/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/node_modules/dotenv/SECURITY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/node_modules/dotenv/config.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/node_modules/dotenv/config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/node_modules/dotenv/lib/cli-options.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/node_modules/dotenv/lib/env-options.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/node_modules/dotenv/lib/main.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/node_modules/dotenv/lib/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/node_modules/dotenv/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/python_service/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/python_service/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/python_service/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/python_service/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/python_service/services/model_manager.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/python_service/services/postprocess.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/test.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/uploads/1776744574855-e8kkaubq.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/uploads/1776750893209-3wjinvdf.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/uploads/1776750990425-9vdbby6y.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/uploads/image_794b71d918.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/uploads/image_8f28323f89.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/uploads/image_e77a6f1b3e.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/完整项目构建顺序.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/本地测试说明.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/毕设论文可直接使用表述.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/项目重构说明.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/camera.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/camera.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/data/knowledge.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/data/knowledge.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/history.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/history.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/image.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/image.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/knowledge.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/knowledge.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/recycle.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/recycle.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/video.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/configs/data.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/training/configs/data.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/configs/gtx1650_n.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/configs/gtx1650_s.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/configs/gtx1650_s_stage1.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/configs/gtx1650_s_stage2.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/configs/stage1_head_warmup.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/training/configs/stage1_head_warmup.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/configs/stage2_full_finetune.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/training/configs/stage2_full_finetune.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/scripts/common.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/scripts/dataset_stats.py" beforeDir="false" afterPath="$PROJECT_DIR$/training/scripts/dataset_stats.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/scripts/merge_cardboard_into_paper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/scripts/prepare_yolo_dataset.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/scripts/split_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/training/scripts/split_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/scripts/train_pipeline.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/scripts/train_stage1.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/scripts/train_stage2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/scripts/validate_and_select.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/training/scripts/validate_labels.py" beforeDir="false" afterPath="$PROJECT_DIR$/training/scripts/validate_labels.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yolo26n.pt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/yolov8n.pt" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+      <option value="repository" />
+    </option>
+  </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="56" />
+    <option name="cachedIndexableFilesCount" value="96216" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "LMingAn"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;LMingAn&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/LMingAn/garbage-system.git",
-    "accountId": "e3884442-a6dc-43f3-b554-e4d209bbfe03"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/LMingAn/garbage-system.git&quot;,
+    &quot;accountId&quot;: &quot;e3884442-a6dc-43f3-b554-e4d209bbfe03&quot;
   }
-}]]></component>
+}</component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 5
-}]]></component>
-  <component name="ProjectId" id="3CeReyTcIkHA2ndcLBRTuniuSPx" />
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="3BG2qW9zUBuzFo3VfgzJw7VoEii" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.app.executor&quot;: &quot;Run&quot;,
+    &quot;Python.generate_pseudo_labels.executor&quot;: &quot;Run&quot;,
+    &quot;Python.generate_pseudo_labels_3060_laptop.executor&quot;: &quot;Run&quot;,
+    &quot;Python.prepare_labelimg_review.executor&quot;: &quot;Run&quot;,
+    &quot;Python.python.exe.executor&quot;: &quot;Run&quot;,
+    &quot;Python.split_data.executor&quot;: &quot;Run&quot;,
+    &quot;Python.train_final_model(1650).executor&quot;: &quot;Run&quot;,
+    &quot;Python.train_final_model.executor&quot;: &quot;Run&quot;,
+    &quot;Python.train_pipeline.executor&quot;: &quot;Run&quot;,
+    &quot;Python.train_seed_model_3060_laptop.executor&quot;: &quot;Run&quot;,
+    &quot;Python.train_stage1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.train_stage2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.validate_and_select.executor&quot;: &quot;Run&quot;,
+    &quot;Python.validate_labels.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/basic software/PC_project/garbage-system/docs&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
+  <component name="PyConsoleOptionsProvider">
+    <option name="myPythonConsoleState">
+      <console-settings module-name="garbage_proj" is-module-sdk="true">
+        <option name="myUseModuleSdk" value="true" />
+        <option name="myModuleName" value="garbage_proj" />
+      </console-settings>
+    </option>
+  </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
+    <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\basic software\PC_project\garbage-system\docs" />
+      <recent name="D:\basic software\PC_project\garbage-system\training\scripts" />
+      <recent name="D:\Download\garbage-system-training-optimized\garbage_proj\training\configs" />
+      <recent name="D:\Download\garbage-system-training-optimized\garbage_proj\training\scripts" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="python.exe" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="garbage_proj" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/anylabeling_env/Scripts" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/anylabeling_env/Scripts/python.exe" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.python.exe" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -63,23 +339,15 @@
       </set>
     </attachedChunks>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task active="true" id="Default" summary="默认任务">
-      <changelist id="812821bc-d717-45c9-8645-5b2a00a9d3c5" name="更改" comment="" />
-      <created>1776744150036</created>
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bd144f51-ad5e-43a5-8fd9-494871b00bc7" name="Changes" comment="" />
+      <created>1774101276948</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1776744150036</updated>
+      <updated>1774101276948</updated>
     </task>
-    <task id="LOCAL-00001" summary="v3（大幅重构）">
-      <option name="closed" value="true" />
-      <created>1776751487062</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1776751487062</updated>
-    </task>
-    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -95,6 +363,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="v3（大幅重构）" />
-    <option name="LAST_COMMIT_MESSAGE" value="v3（大幅重构）" />
+    <MESSAGE value="Changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changes" />
   </component>
 </project>

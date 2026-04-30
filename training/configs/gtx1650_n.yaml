@@ -1,2 +1,0 @@
-stage1: stage1_head_warmup.yaml
-stage2: stage2_full_finetune.yaml
